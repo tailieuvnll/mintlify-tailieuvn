@@ -36,8 +36,7 @@
           {
             "group": "Platform Overview",
             "pages": [
-              "vi/02-platform/index.mdx"
-              
+              "vi/02-platform/index.mdx"    
             ]
           }
         ]    

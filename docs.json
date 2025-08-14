@@ -34,7 +34,7 @@
         "tab": "Platform",
         "groups": [
           {
-            "group": "Platform Overview",
+            "group": "Kiến trúc hệ thống",
             "pages": [
               "vi/02-platform/index.mdx"    
             ]

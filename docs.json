@@ -1,121 +1,109 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "LUKLAK Unified & Universal",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#72AEFF",
+    "light": "#72AEFF",
+    "dark": "#72AEFF"
   },
   "favicon": "/favicon.svg",
+  "contextual": {
+   "options": [
+     "copy",
+     "view",
+     "chatgpt",
+     "claude"
+   ]
+ },
   "navigation": {
-    "tabs": [
+  "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Bắt đầu",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "About Luklak",
+             "icon": "layer-group",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
-          },
-          {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "vi/01-bat-dau/index"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Platform",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Platform Overview",
             "pages": [
-              "api-reference/introduction"
+              "vi/02-platform/index.mdx"
+              
+            ]
+          }
+        ]    
+      },
+      {
+        "tab": "Thiết kế",
+        "groups": [
+          {
+            "group": "Start Building",
+            "pages": [
+              "vi/03-thiet-ke/index"
+					]
+				}
             ]
           },
+      {
+        "tab": "Làm việc & quản lý",
+        "groups": [
           {
-            "group": "Endpoint examples",
+            "group": "Use & Manage",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "vi/04-su-dung/index"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Templates",
+        "groups": [
+          {
+            "group": "Function Templates",
+            "pages": [
+              "vi/05-templates/index"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Khóa học",
+        "groups": [
+          {
+            "group": "Tự động hóa",
+            "pages": [
+              "en/06-academy/tab06-note"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
+    ]
+},
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/luklaklight.svg",
+    "dark": "/logo/luklakdark.svg"
   },
   "navbar": {
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:hello@luklak.com"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Sign up",
+      "href": "https://luklak.com"
     }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
   },
   "footer": {
     "socials": {

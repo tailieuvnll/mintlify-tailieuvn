@@ -1,0 +1,64 @@
+---
+title: "Kỹ thuật Nâng cao: Quản trị sự Thay đổi"
+description: "Doanh nghiệp của bạn luôn vận động, và hệ thống của bạn cũng nên như vậy. Hãy học các phương pháp tốt nhất để kiểm thử, triển khai và quản lý các cập nhật một cách an toàn trên một hệ thống đang vận hành."
+sidebarTitle: "Quản trị sự Thay đổi"
+---
+
+**Thích ứng một cách Tự tin**
+
+<Info>
+Một trong những sức mạnh lớn nhất của Luklak là sự linh hoạt. Không giống như các phần mềm đóng gói cứng nhắc, bạn có thể điều chỉnh hệ thống của mình khi quy trình kinh doanh thay đổi. Nhưng sức mạnh này luôn đi kèm với trách nhiệm.
+
+Việc thay đổi một hệ thống đang vận hành và có vai trò cốt lõi có thể rất rủi ro nếu không được xử lý đúng cách. Hướng dẫn này cung cấp một phương pháp luận có cấu trúc và an toàn để bạn quản trị sự thay đổi, cho phép bạn tự tin đổi mới trong khi giảm thiểu sự gián đoạn đối với đội ngũ của mình.
+</Info>
+
+## **Thách thức Cốt lõi: Cập nhật một Hệ thống đang hoạt động**
+
+Một khi đội ngũ của bạn đã phụ thuộc vào một `📋 Function` cho công việc hàng ngày, bất kỳ thay đổi nào cũng có thể tạo ra tác động lớn. Việc chỉnh sửa một `Luồng tiến trình`, thay đổi một `Tự động hóa`, hay xóa bỏ một `Trường Dữ liệu` đều có khả năng làm gãy vỡ quy trình hoặc gây bối rối cho người dùng.
+
+Một quy trình quản trị sự thay đổi có cấu trúc sẽ giúp giảm thiểu những rủi ro này.
+
+## **Quy trình Quản trị sự Thay đổi được khuyến nghị**
+
+Đối với bất kỳ thay đổi nào ngoài việc chỉnh sửa nhỏ về mặt giao diện, chúng tôi đặc biệt khuyến nghị bạn tuân thủ vòng đời: **"Phát triển → Kiểm thử → Triển khai"**.
+
+<CardGroup cols={1}>
+  <Card title="Bước 1: Tạo môi trường Sandbox bằng cách Nhân bản Function" icon="vial" iconType="duotone">
+    **Không bao giờ thực hiện các thay đổi lớn trực tiếp trên `📋 Function` đang hoạt động.** Bước đầu tiên an toàn nhất là tạo một bản sao của `Function` để sử dụng như một môi trường "hộp cát" (sandbox).
+
+    - **Cách làm:** Vào phần cài đặt của `Function`, chọn "Duplicate Function" (Nhân bản Function), và đặt cho bản sao một cái tên rõ ràng, ví dụ: `[Tên Function] - V2 Development`.
+    - Việc này tạo ra một bản sao y hệt nhưng hoàn toàn độc lập, nơi bạn có thể tự do thử nghiệm mà không ảnh hưởng đến người dùng hay dữ liệu thật.
+  </Card>
+  <Card title="Bước 2: Phát triển & Kiểm thử các thay đổi trong Sandbox" icon="user-gear" iconType="duotone">
+    Với bản sao sandbox, giờ đây bạn có thể an toàn thực hiện tất cả những thay đổi mình muốn. Thiết kế lại `Luồng tiến trình`, thêm `Trường Dữ liệu` mới, hay xây dựng các `Tự động hóa` phức tạp.
+
+    - **Bước phụ cực kỳ quan trọng: Kiểm thử.** Hãy tạo một "`⏹️ Space` Thử nghiệm" tạm thời từ `Function` sandbox của bạn. Thêm một nhóm nhỏ những người dùng thành thạo (power users) vào `Space` này.
+    - Yêu cầu họ tạo các `🧊 Object` mẫu và chạy thử quy trình mới để cung cấp phản hồi và xác định bất kỳ vấn đề tiềm tàng nào trước khi ra mắt chính thức.
+  </Card>
+  <Card title="Bước 3: Truyền thông và Triển khai Phiên bản mới" icon="rocket-launch" iconType="duotone">
+    Một khi bạn đã tự tin rằng phiên bản mới hoạt động hoàn hảo, đã đến lúc triển khai nó.
+
+    - **Truyền thông là Chìa khóa:** Hãy thông báo về những thay đổi sắp tới cho tất cả người dùng từ trước. Giải thích rõ **cái gì** đang thay đổi, **tại sao** nó thay đổi, và **khi nào** nó sẽ diễn ra. Cung cấp một buổi đào tạo ngắn hoặc một đường link đến hướng dẫn sử dụng.
+    - **Chiến lược Triển khai:**
+        - **Đối với Thay đổi Nhỏ** (ví dụ: thêm một trường mới, không mang tính cốt lõi): Sau khi đã truyền thông, bạn có thể thực hiện những thay đổi này trực tiếp trên `Function` đang hoạt động, tốt nhất là vào những giờ thấp điểm.
+        - **Đối với Thay đổi Lớn** (ví dụ: thiết kế lại toàn bộ luồng tiến trình): Sử dụng phương pháp sandbox. Việc triển khai bao gồm việc tạo ra một `⏹️ Space` chính thức mới từ `Function` V2 đã được hoàn thiện của bạn. Sau đó, bạn hướng dẫn người dùng bắt đầu mọi công việc mới trong `Space` này và lên kế hoạch lưu trữ `Space` cũ.
+  </Card>
+</CardGroup>
+
+---
+
+## **Giờ đây, bạn là một Kiến trúc sư Luklak**
+
+Xin chúc mừng! Bạn đã hoàn thành toàn bộ hành trình **"Cẩm nang Xây dựng" (Build Playbooks)**.
+
+Bạn đã học được **phương pháp luận** nền tảng để thiết kế hệ thống, theo dõi một **tình huống mẫu flagship** từ vấn đề đến giải pháp, khám phá các **mô hình giải pháp** thay thế, và giờ đây đã hiểu các **kỹ thuật nâng cao** để kết nối, tối ưu hóa và quản trị một hệ thống đang vận hành.
+
+Bạn hiện đã có bộ kỹ năng hoàn chỉnh để kiến tạo nên những hệ điều hành mạnh mẽ, có khả năng mở rộng và thực sự hợp nhất trên nền tảng Luklak.
+
+**Hành trình tiếp theo?**
+
+Hành trình học hỏi của bạn vẫn tiếp tục. Khi đã nắm vững nghệ thuật xây dựng, hãy khám phá các khu vực khác của Cổng thông tin Học tập:
+
+- [Làm chủ việc sử dụng hàng ngày: Đến trang Hướng dẫn Người dùng](/04-user-guides)
+- [Tăng tốc cho lần xây dựng tiếp theo: Ghé thăm Thư viện Mẫu](/05-templates)
+- [Trở thành Chuyên gia được Chứng nhận: Khám phá các Khóa học](/06-courses)

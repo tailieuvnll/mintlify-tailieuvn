@@ -26,6 +26,7 @@
              "icon": "layer-group",
             "pages": [
               "vi/01-bat-dau/index",
+              "vi/01-bat-dau/dinh-vi",
               "vi/01-bat-dau/tcs"
             ]
           }

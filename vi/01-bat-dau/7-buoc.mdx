@@ -1,0 +1,258 @@
+---
+title: "Hướng dẫn: 7 Bước Xây dựng Chức năng CRM Đầu tiên"
+description: "Bắt tay vào thực hành với hướng dẫn chi tiết từng bước để tự kiến tạo một chức năng quản lý CRM hoàn chỉnh, từ việc định nghĩa nghiệp vụ đến thiết lập tự động hóa và báo cáo."
+sidebarTitle: "Tutorial: Xây dựng CRM"
+---
+
+import { Card, Columns, Note, Frame, Tip, Tab, Tabs, Tooltip } from 'mintlify/components';
+
+<Tip>
+  **Chức năng là gì?** Là đơn vị tổ chức của Luklak nocode, có thể hiểu là tấm bản đồ thiết kế logic vận hành của một mảng công việc lớn.
+
+  Sau đó, một <Tooltip tip="Là một không gian làm việc 'sống', nơi người dùng cuối thực hiện các công việc hàng ngày. Mỗi Mảng việc sẽ vận hành theo logic của một Chức năng được gán vào.">Mảng việc</Tooltip> được gắn với chức năng nào thì sẽ vận hành đúng theo chỉ dẫn của chức năng đó.
+</Tip>
+
+Giả sử bạn muốn tạo <Tooltip tip="Là một bản thiết kế logic, chứa đựng toàn bộ quy trình, dữ liệu, và tự động hóa cho một nghiệp vụ cụ thể.">chức năng</Tooltip> CRM để quản lý sâu sát mọi nghiệp vụ từ khách hàng đến hợp đồng, từ tư vấn đến chốt thành công. Chỉ với 7 bước đơn giản là làm được.
+
+## B1: Xác định Chức năng & Nghiệp vụ
+
+<Tabs>
+  <Tab title="THIẾT KẾ">
+    #### Xác định các nghiệp vụ cụ thể
+
+    <Frame caption="Một chức năng sẽ bao gồm các nghiệp vụ cụ thể bên trong. Ví dụ, với CRM, doanh nghiệp cần quản lý Khách hàng, Lịch hẹn, Deal, Contact, Triển khai, Khiếu nại...">
+      ![Xác định nghiệp vụ](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FU7Aosn96EqHLefaBM06J%2Fimage.png?alt=media&token=7c0d711e-bc48-493b-895e-82602f893edc)
+    </Frame>
+    #### Thêm mới nghiệp vụ vào chức năng
+
+    <Frame caption="Thêm mới Nghiệp vụ (Issue Type) nhanh chóng. Bạn có thể định nghĩa được nghiệp vụ cha và nghiệp vụ con.">
+      ![Thêm nghiệp vụ](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FWrE8us4KzbuPOfeurXOV%2Fimage.png?alt=media&token=3b5bd1ce-4798-4498-bcfd-72a659052983)
+    </Frame>
+    <Info>
+      **Universal Object - Miếng lego lõi quan trọng nhất:**
+
+      Đứng đằng sau mọi nghiệp vụ người dùng tạo ra đều là <Tooltip tip="Đơn vị lõi phổ quát và linh hoạt nhất của Luklak, có thể đại diện cho bất cứ thứ gì bạn muốn quản lý: một khách hàng, một dự án, một nhân sự, một tài sản...">Universal Object</Tooltip> - đơn vị lõi phổ quát & linh hoạt. Nó có thể đại diện cho bất cứ nghiệp vụ nào:
+
+      - **Customer** trong CRM
+      - **Employee** trong HRM
+      - **Task** trong quản lý công việc
+      - **Request/Ticket** trong IT Helpdesk, Customer Service
+      - **Machine/Equipment** trong quản lý bảo trì (CMMS)
+
+      Đối tượng này được thiết kế phổ quát, đáp ứng mọi nhu cầu vận hành đa dạng, đặc thù.
+    </Info>
+  </Tab>
+  <Tab title="SỬ DỤNG">
+    #### Mảng việc chứa đầy đủ nghiệp vụ đã tạo
+
+    <Frame caption="Ví dụ, Mảng việc 'Kinh doanh HN' đang vận hành theo Chức năng CRM đã thiết kế.">
+      ![Mảng việc CRM](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FmFg3VWuH31iLtgt4drIv%2Fimage.png?alt=media&token=e7745f02-5ccb-4f83-b6b1-24179c7a49d5)
+    </Frame>
+    <Frame caption="Mảng việc này sẽ có các loại nghiệp vụ tương ứng đã được thiết kế, như Khách hàng, Triển khai, Lịch hẹn...">
+      ![Nghiệp vụ trong mảng việc](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FxiJ38BaFrVbciGwhzJA0%2Fimage.png?alt=media&token=01350599-462e-4cc0-a44c-62de76cffb82)
+    </Frame>
+    <Frame caption="Ví dụ hiển thị thực tế của một nghiệp vụ 'Khách hàng' (Customer).">
+      <img
+        src="https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FbhjpynTvJw87eY43IAhY%2Fimage.png?alt=media&token=5bb1abfd-9d0b-4fa8-a52e-fd3e61d228da"
+        alt="Nghiệp vụ Customer"
+        width="375"
+      />
+    </Frame>
+  </Tab>
+</Tabs>
+
+## B2: Chuẩn hóa Quy trình (Workflow)
+
+<Info>
+  **Quy trình (Workflow) là gì?** Quy trình bao gồm các **trạng thái** (status) và các **bước chuyển** (transition) giữa chúng, cho phép định nghĩa một luồng công việc được chuẩn hóa cho mỗi loại nghiệp vụ.
+</Info>
+
+<Tabs>
+  <Tab title="THIẾT KẾ">
+    > Thiết kế Quy trình trong Luklak bao gồm:
+    >
+    > 1. Thiết kế lưu đồ các bước thực hiện
+    > 2. Thiết lập điều kiện & quyền hạn ở từng bước chuyển
+    > 3. Gắn các quy tắc tự động hóa tương ứng khi trạng thái thay đổi
+
+    #### Kéo-thả để tạo lưu đồ workflow trực quan
+
+    <Frame caption="Ví dụ về lưu đồ quy trình mà một nghiệp vụ 'Customer' sẽ đi qua.">
+      ![Lưu đồ workflow](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2F137Ni8DZeDB211Yva4Pd%2Fimage.png?alt=media&token=70ac2be5-c1f6-4e52-8651-a4a899208dae)
+    </Frame>
+    #### Cấu hình điều kiện chuyển bước chặt chẽ
+
+    <Frame caption="Thiết lập vai trò nào được phép thực hiện bước chuyển này.">
+      <img
+        src="https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FsSf2vJMj6OorTpbOMySh%2Fimage.png?alt=media&token=f2dea998-b0e3-4df9-a108-55ef6ec25f22"
+        alt="Điều kiện người dùng"
+        width="563"
+      />
+    </Frame>
+    <Frame caption="Yêu cầu các trường dữ liệu phải được điền đầy đủ.">
+      ![Điều kiện trường dữ liệu](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FXRpKp6eRDormUTE9fM59%2Fimage.png?alt=media&token=2a813537-be06-40ea-83c7-b1cc58777ff7)
+    </Frame>
+    <Frame caption="Yêu cầu các mục kiểm (checklist) phải được hoàn thành.">
+      ![Điều kiện mục kiểm](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2Fb0jWMnr9EIgonZ8ZTC9A%2Fimage.png?alt=media&token=11f4da27-f058-43af-a0ff-5a0b6d525289)
+    </Frame>
+  </Tab>
+  <Tab title="SỬ DỤNG">
+    <Frame caption="Ví dụ: Nhân viên kinh doanh chuyển Customer sang trạng thái 'Thất bại' sẽ nhận được cảnh báo do chưa điền 'Lí do thất bại' theo điều kiện đã thiết lập.">
+      ![Cảnh báo quy trình](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FVEqM8YvrTrI241IOs5jv%2Fimage.png?alt=media&token=a74b4e1f-f889-4a3a-a798-672ae1e046dc)
+    </Frame>
+    <Frame caption="Nhân sự làm đến đâu, sẽ có hướng dẫn trực tiếp ở bước đó.">
+      ![Hướng dẫn quy trình](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FzACn3tv3HuKiSOcsLcCF%2Fimage.png?alt=media&token=93302156-0c6c-4c32-897a-ab6547c8fdeb)
+    </Frame>
+  </Tab>
+</Tabs>
+
+## B3: Tạo trường dữ liệu tùy chỉnh
+
+<Tabs>
+  <Tab title="THIẾT KẾ">
+    #### Kéo-thả để tạo trường dữ liệu cho nghiệp vụ
+
+    <Frame caption="Ví dụ: định nghĩa các trường dữ liệu sẽ đi kèm với nghiệp vụ 'Customer'. Bạn có thể thiết lập các điều kiện bắt buộc hoặc xác thực dữ liệu (validate).">
+      <img
+        src="https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2F81KEGy2iRDILgzTUrabv%2Fimage.png?alt=media&token=7419c699-c590-4ec5-a23f-3cfa01586305"
+        alt="Tạo trường dữ liệu"
+        width="563"
+      />
+    </Frame>
+    #### Đa dạng các loại trường dữ liệu
+
+    <Frame caption="Luklak cung cấp đa dạng các kiểu dữ liệu, đáp ứng nhiều nhu cầu nghiệp vụ khác nhau.">
+      ![Các loại trường dữ liệu](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FIb8qUVndfjSK313Iixh9%2Fimage.png?alt=media&token=eefff99f-64b4-4453-ad9f-164ba1bc4fbe)
+    </Frame>
+    <Tip>
+      **Trường Công thức (Formula Field):** Cho phép tự động tính toán dữ liệu dựa trên các trường khác, hỗ trợ các phép toán (\+, -, \*, /) và các hàm logic (IF, THEN, ELSE) mạnh mẽ.
+    </Tip>
+  </Tab>
+  <Tab title="SỬ DỤNG">
+    #### Trường dữ liệu hiển thị như đã thiết lập
+
+    <Frame caption="Thực tế làm việc: Nghiệp vụ 'Customer' luôn đi kèm bộ dữ liệu đã tạo. Khi chuyển trạng thái, hệ thống có thể tự động yêu cầu cập nhật các trường quan trọng, giúp nhân sự điền đủ thông tin mà không cần phải ghi nhớ.">
+      ![Sử dụng trường dữ liệu](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2Fi7sEiucX3jZMdvpLsDhq%2Fimage.png?alt=media&token=b76fae10-2200-4fcf-8095-74674f92fea4)
+    </Frame>
+  </Tab>
+</Tabs>
+
+## B4: Thiết lập Tự động hóa (Automation)
+
+<Tabs>
+  <Tab title="THIẾT KẾ">
+    #### Thiết lập quy tắc tự động hóa
+
+    > Chỉ cần xác định **Tác nhân kích hoạt** (Trigger), **Luồng logic** (Flow Logic), và **Hành động** (Action) mong muốn.
+
+    <Frame caption="Giao diện kéo-thả để tạo ra các quy tắc tự động hóa một cách trực quan.">
+      ![Thiết lập tự động hóa](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FwjH94qPS9FYG1KpvkJrW%2Fimage.png?alt=media&token=44bbbfca-edd0-4f90-92e3-f6b1c4cee11a)
+    </Frame>
+    <Frame caption="Hệ thống cho phép tự động hóa đa dạng tác vụ: từ giao việc, tạo việc con, chuyển trạng thái, đến gửi chat, SMS, email, và tương tác với bên ngoài qua API & Webhook.">
+      ![Các hành động tự động](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FwejcXLkdlUy0uCmEFXaM%2Fimage.png?alt=media&token=45b20259-6176-4c49-9423-ec57ac40db42)
+    </Frame>
+  </Tab>
+  <Tab title="SỬ DỤNG (VÍ DỤ)">
+    <Frame caption="**Tự động tạo 'Customer' khi có khách điền form trên web:** Dữ liệu từ website sẽ tự động tạo một nghiệp vụ mới trong Mảng việc của phòng Kinh doanh.">
+      ![Tự động tạo từ form](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FWHOdotepjlAGwvdGUkqr%2Fimage.png?alt=media&token=f3b709ea-cfc4-46ed-b6fa-bb6eebaa34f2)
+    </Frame>
+    <Frame caption="**Tự động chia lead theo trọng số:** Hệ thống tự động phân bổ khách hàng tiềm năng cho nhân viên kinh doanh theo vòng tròn và theo trọng số năng lực đã được định sẵn.">
+      ![Chia lead](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FrKsXlBKK6q90JEY5HCH9%2Fimage.png?alt=media&token=74de29be-fcf5-4df3-a264-f2541f48ff67)
+    </Frame>
+    <Frame caption="**Tự động tạo phiếu thu khi nhấn nút:** Khi Kế toán cần tạo phiếu thu, họ chỉ cần nhấn vào nút đã được cấu hình sẵn, hệ thống sẽ tự động thực hiện phần còn lại.">
+      <img
+        src="https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FoGF7HF4YR5IOnbagHWOr%2Fimage.png?alt=media&token=1d8b467a-4a23-448b-a7cd-8f99aa2bcf43"
+        alt="Tạo phiếu thu"
+        width="435"
+      />
+    </Frame>
+  </Tab>
+</Tabs>
+
+## B5: Kết nối & Tích hợp (Integration)
+
+<Tabs>
+  <Tab title="THIẾT KẾ">
+    #### Kết nối thông qua Tự động hóa
+
+    > Luklak cho phép kết nối với các hệ thống bên ngoài. Bạn chỉ cần chọn hành động (action) và loại kết nối mong muốn: Zalo, Email, SMS, n8n, API, Webhook.
+
+    <Frame caption="Luklak đã tích hợp sẵn với các ứng dụng phổ biến như Google Drive, Microsoft Calendar, Google Sheet, Excel, Email, Zalo để có thể dùng được ngay.">
+      ![Kết nối tự động hóa](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FVhqGuIWBG5zWiExD1SSt%2Fimage.png?alt=media&token=e336ef19-c3a8-40eb-acd9-b003a339498a)
+    </Frame>
+    #### n8n - Mở ra con đường kết nối sâu rộng
+
+    <Frame caption="Luklak tích hợp sẵn với n8n, một nền tảng trung gian giúp kết nối với hơn 400 ứng dụng phổ biến khác trên thế giới.">
+      ![n8n](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FcBosuDXPRCnf5YTw7T25%2Fimage.png?alt=media&token=e5c3e233-ce5e-4cde-8590-76b11e9a2801)
+    </Frame>
+  </Tab>
+  <Tab title="SỬ DỤNG (VÍ DỤ)">
+    #### Tự động gửi email
+
+    <Frame caption="Khi nghiệp vụ 'Khách hàng' được chuyển sang trạng thái 'Đã demo', hệ thống sẽ tự động gửi email cảm ơn & tóm tắt nội dung cuộc họp.">
+      ![Gửi email](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FFd1dzTEGDRBxZbs3uWPy%2Fimage.png?alt=media&token=bfd9124b-a7ca-4ef4-9726-81fa9dc380e0)
+    </Frame>
+    #### Tự động gửi tin nhắn Zalo
+
+    <Frame caption="Khi hợp đồng đã được ký thành công, hệ thống tự động gửi tin nhắn Zalo chúc mừng đến khách hàng và thông báo cho đội ngũ nội bộ.">
+      ![Gửi Zalo](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FVJtOJm2KADFeyLKVCzn0%2Fimage.png?alt=media&token=7cfbe087-1a1e-4448-acbb-3c9d63833e76)
+    </Frame>
+  </Tab>
+</Tabs>
+
+## B6: Tự tạo Báo cáo (Dashboard)
+
+<Tabs>
+  <Tab title="THIẾT KẾ">
+    #### Chọn nguồn dữ liệu, cấu hình báo cáo
+
+    <Frame caption="Dashboard cho phép lấy dữ liệu từ các bộ lọc, giúp bạn linh hoạt tự tạo các báo cáo trực quan, đa chiều, tiện dụng, không hề bị bó cứng.">
+      ![Cấu hình báo cáo](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FE8wn9NRENW3lJwVRjMIa%2Fimage.png?alt=media&token=526c3ef3-c9e4-44ff-b1af-c704485f8ea7)
+    </Frame>
+    #### Bộ lọc linh hoạt, sâu rộng toàn hệ thống
+
+    <Frame caption="Bộ lọc của Luklak không chỉ cho phép lọc dữ liệu trong một mảng việc, mà có thể truy vấn từ mọi điểm dữ liệu trên toàn hệ thống để trả lời các câu hỏi phức tạp về tình hình công việc.">
+      ![Bộ lọc](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FSYqK5HXJBL9tm7WaO0lQ%2Fimage.png?alt=media&token=07af4d45-a443-4d47-af39-c4730021715b)
+    </Frame>
+  </Tab>
+  <Tab title="SỬ DỤNG">
+    #### Báo cáo kinh doanh theo thời gian thực
+
+    <Frame caption="Người dùng có thể tương tác, click để xem chi tiết, và làm việc trực tiếp ngay trên báo cáo. Mọi báo cáo đều có thể được cấu hình linh hoạt theo nhu cầu phân tích.">
+      ![Loại biểu đồ](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2F2GgP1fq4592u2rbc4OWS%2FDashboardGIF674kb-ezgif.com-video-to-gif-converter.gif?alt=media&token=5d7c2e1a-2047-4820-973a-ef1bb7ca497c)
+    </Frame>
+  </Tab>
+</Tabs>
+
+## B7: Cấu hình Phân quyền & Thông báo
+
+<Tabs>
+  <Tab title="THIẾT KẾ">
+    #### Cấu hình phương án phân quyền
+
+    <Frame caption="Hệ thống cung cấp đến 25 sự kiện phân quyền chi tiết, giúp bạn kiểm soát chặt chẽ ai được làm gì.">
+      ![Phân quyền](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FNQyPg0TzkZQ9kP47H5i3%2Fimage.png?alt=media&token=3f79631d-9bee-47c9-adaf-5d4b5b534b4a)
+    </Frame>
+    #### Cấu hình phương án thông báo
+
+    <Frame caption="Ví dụ: Sales Manager đang thiết lập phương án thông báo, cho phép bất kỳ ai thuộc Vai trò 'Nhân viên kinh doanh' đều nhận được thông báo khi có hành động 'chuyển trạng thái'.">
+      ![Thông báo](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FJaOw5awqJEIdbg8FStxX%2Fimage.png?alt=media&token=11deafc2-b81e-4ce9-ba07-41f44c42231e)
+    </Frame>
+  </Tab>
+  <Tab title="SỬ DỤNG">
+    #### Người dùng nhận được thông báo như đã thiết lập
+
+    <Frame caption="Ví dụ: Người dùng thuộc vai trò 'Nhân viên kinh doanh' nhận được thông báo khi một Hợp đồng được chuyển sang trạng thái 'Tiền về'.">
+      ![Sử dụng thông báo](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FWxaEbVI0JPracjtm7j6E%2Fimage.png?alt=media&token=a82a6e6f-78bb-461a-9118-709a4292c440)
+    </Frame>
+  </Tab>
+</Tabs>
+
+## What's Next?
+
+<Tip>
+  Chúc mừng bạn đã hoàn thành hướng dẫn\! Giờ bạn đã có một cái nhìn tổng quan về cách kiến tạo một <Tooltip tip="Là một bản thiết kế logic, chứa đựng toàn bộ quy trình, dữ liệu, và tự động hóa cho một nghiệp vụ cụ thể.">chức năng</Tooltip> trên Luklak.
+</Tip>
+
+- [**Khám phá các Mẫu Chức năng có sẵn:**](/templates/function-templates) Sử dụng các mẫu được thiết kế sẵn để tăng tốc quá trình triển khai của bạn.
+- [**Tìm hiểu sâu về Tự động hóa:**](/core-concepts/automation) Khai thác toàn bộ sức mạnh của bộ công cụ tự động hóa để tối ưu vận hành.

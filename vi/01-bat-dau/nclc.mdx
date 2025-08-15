@@ -1,0 +1,99 @@
+---
+title: 'Nocode & Lowcode 101: Nền tảng cho Vận hành Linh hoạt'
+description: 'Khám phá các khái niệm cơ bản về Nocode và Lowcode, và cách Luklak sử dụng kiến trúc độc đáo này để trao quyền cho doanh nghiệp tự kiến tạo hệ thống vận hành.'
+sidebarTitle: 'Nocode & Lowcode 101'
+---
+
+import { Card, Columns, Note, Frame, Tip } from 'mintlify/components';
+
+## Nền tảng Lowcode/Nocode là gì?
+
+Nền tảng Lowcode/Nocode cung cấp một môi trường phát triển phần mềm mà người dùng có thể tạo ra các ứng dụng thông qua giao diện đồ họa và cấu hình, thay vì phải viết code theo cách truyền thống.
+
+- **Nocode** cho phép người dùng không có kỹ năng kỹ thuật (non-technical users) có thể xây dựng ứng dụng bằng cách kéo-thả các thành phần đã được làm sẵn.
+- **Lowcode** yêu cầu một ít kỹ năng lập trình để mở rộng và tùy chỉnh sâu hơn những gì nền tảng cung cấp sẵn.
+
+<Note>
+  Luklak là một nền tảng **Lowcode/Nocode**. Điều này có nghĩa là bạn có được sự dễ dàng của Nocode cho 90% các tác vụ thông thường, và sức mạnh của Lowcode để giải quyết 10% các bài toán đặc thù và phức tạp nhất.
+</Note>
+
+## So sánh các phương pháp xây dựng hệ thống
+
+Khi cần một giải pháp công nghệ, doanh nghiệp thường đứng trước ba ngã rẽ chính.
+
+<Columns cols={3}>
+  <Card title="Phần mềm Đóng gói (SaaS)" icon="box-archive">
+    Các ứng dụng làm sẵn phục vụ một nhu cầu cụ thể (ví dụ: CRM, quản lý dự án).
+    
+    - **Ưu điểm:** Triển khai nhanh, chi phí ban đầu thấp.
+    - **Nhược điểm:** Quy trình cứng nhắc, khó tùy chỉnh, dữ liệu phân mảnh.
+  </Card>
+  <Card title="Viết Code Tùy chỉnh (Custom Code)" icon="code">
+    Thuê đội ngũ kỹ thuật để xây dựng phần mềm từ đầu.
+    
+    - **Ưu điểm:** Đáp ứng mọi yêu cầu đặc thù, toàn quyền kiểm soát.
+    - **Nhược điểm:** Chi phí cực kỳ cao, thời gian triển khai rất lâu, khó bảo trì.
+  </Card>
+  <Card title="Nền tảng Nocode/Lowcode" icon="puzzle-piece">
+    Sử dụng các "khối lego" có sẵn để tự lắp ráp nên hệ thống.
+    
+    - **Ưu điểm:** Linh hoạt tuyệt đối, tốc độ triển khai nhanh, trao quyền cho người dùng.
+    - **Nhược điểm:** Đòi hỏi tư duy hệ thống và thiết kế quy trình.
+  </Card>
+</Columns>
+
+<Frame>
+  <img src="https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2Fb0gC79y1F1Qc6T8TrzcF%2Fimage.png?alt=media&token=e937d7a5-9df0-4a87-b50a-e37a77e0c7a8" alt="So sánh các phương pháp xây dựng phần mềm"/>
+</Frame>
+
+## Kiến trúc của Luklak: Tại sao lại linh hoạt?
+
+Để mang lại sự cân bằng tối ưu giữa tốc độ và khả năng tùy biến, Luklak được xây dựng trên **kiến trúc 3 tầng** độc đáo.
+
+<Frame>
+  <img src="https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FxN8sFkHj3Kk4CKnSoL5T%2Fimage.png?alt=media&token=40424564-927b-4043-9dd1-e0ac429f5f65" alt="Kiến trúc 3 tầng của Luklak"/>
+</Frame>
+
+### Tầng 1: Lõi Nền tảng (Core Blocks) - Lowcode
+
+Đây là tầng nền móng, bao gồm các thành phần cơ bản và mạnh mẽ nhất, tương tự như các nguyên tử trong thế giới vật chất.
+
+* **`🧊 Đối tượng Phổ quát` (`Universal Object`)**: "Viên gạch" nền tảng để định nghĩa bất kỳ loại đối tượng nào bạn muốn quản lý (Khách hàng, Dự án, Hợp đồng, Nhân sự...).
+* **Trường Dữ liệu (Data Fields)**: Các loại trường dữ liệu (văn bản, số, ngày tháng, file đính kèm...) để cấu thành nên một `Đối tượng`.
+* **Luồng công việc (Workflows)**: Các trạng thái và quy tắc chuyển đổi để mô tả vòng đời của một `Đối tượng`.
+
+<Tip>
+Tầng này thường được sử dụng bởi các kiến trúc sư giải pháp hoặc người dùng có kỹ năng kỹ thuật để xây dựng cấu trúc dữ liệu lõi cho toàn doanh nghiệp.
+</Tip>
+
+### Tầng 2: Thiết kế `📋 Chức năng` (Function Design) - Nocode
+
+Từ những "nguyên tử" ở Tầng 1, bạn có thể "lắp ráp" chúng thành các "phân tử" nghiệp vụ hoàn chỉnh, được gọi là `📋 Chức năng` (`Function`). Đây là nơi bạn thiết kế các quy trình nghiệp vụ như Quản lý Bán hàng, Quản lý Tuyển dụng, v.v.
+
+Giai đoạn này được thực hiện hoàn toàn bằng giao diện **Nocode**, nơi người dùng nghiệp vụ có thể tự tay kéo-thả để:
+* Tạo và liên kết các `Đối tượng`.
+* Thiết kế các `Giao diện làm việc` (`Workview`) như Lưới, Kanban, Lịch.
+* Cài đặt quy tắc tự động hóa và phân quyền.
+
+### Tầng 3: Vận hành trong `⏹️ Mảng việc` (Usage & Operation) - Nocode
+
+Đây là nơi công việc thực sự diễn ra. Người dùng cuối sẽ làm việc trên các `⏹️ Mảng việc` (`Space`) – những môi trường làm việc "sống" được tạo ra từ một `📋 Chức năng` (`Function`) ở Tầng 2.
+
+Ví dụ: Từ `📋 Chức năng` "Quản lý Tuyển dụng", bạn có thể tạo ra các `⏹️ Mảng việc` (`Space`) riêng như "Tuyển dụng Marketing 2025" và "Tuyển dụng Sales 2025". Cả hai `Mảng việc` này đều có chung một quy trình chuẩn nhưng dữ liệu (ứng viên) thì hoàn toàn độc lập.
+
+## Xem video giải thích
+
+<iframe
+  className="w-full aspect-video rounded-xl"
+  src="https://www.youtube.com/watch?v=uAX2-n9Z-00"
+  title="LUKLAK Lowcode Nocode"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowFullScreen
+></iframe>
+
+<Note>
+  **Video này giải thích:**
+  * So sánh trực quan giữa 3 phương pháp: SaaS, Custom Code, và Nền tảng Nocode/Lowcode.
+  * Cách kiến trúc 3 tầng của Luklak trao quyền cho doanh nghiệp để vừa có sự linh hoạt của code tùy chỉnh, vừa có tốc độ của SaaS.
+</Note>

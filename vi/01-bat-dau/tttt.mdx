@@ -1,0 +1,106 @@
+---
+title: "Building the Project Delivery Function"
+description: "A complete guide to building LAIKA's core Project Delivery function, connecting Project Management, Design, Site Construction, and Finance."
+sidebarTitle: "Building Project Delivery"
+---
+
+**Từ Chốt Deal đến Triển Khai**
+
+<Info>
+  `Chức năng` CRM đã giúp chúng ta chuẩn hóa quy trình bán hàng. Giờ là lúc xây dựng cỗ máy vận hành phía sau: **Chức năng Quản lý Triển khai Dự án**. Đây là nơi các phòng ban Thiết kế, Thi công, và Kế toán phối hợp để biến hợp đồng thành một công trình thực tế, đảm bảo dòng chảy thông tin thông suốt và mang lại trải nghiệm xuất sắc cho khách hàng.
+
+  Tương tự như bài trước, bạn có thể chuyển đổi giữa tab **Bản Thiết Kế** để xem các thông số kỹ thuật và tab **Hướng Dẫn Xây Dựng** để xem hướng dẫn chi tiết từng bước.
+</Info>
+
+<Tabs>
+  <Tab title="Bản Thiết Kế Chức Năng">
+    ### **1. Tên Chức năng & Phạm vi**
+
+    - **Tên Chức năng**: `Quản lý Triển khai Dự án`
+    - **Phạm vi**: Quản lý toàn bộ vòng đời của một dự án sau khi ký hợp đồng, bao gồm các hạng mục thiết kế, báo cáo thi công, quản lý hợp đồng và theo dõi thanh toán.
+
+    ### **``2. Universal Objects & Data Fields``**
+
+    `Chức năng` này xoay quanh `Đối tượng` trung tâm là **Dự án** và các `Đối tượng` vệ tinh:
+
+    - **`Dự án (Project)`**: `Đối tượng` trung tâm, lưu trữ mọi thông tin tổng quan.
+      - _Các trường dữ liệu chính_: `Tên Dự án`, `Khách hàng` (Kết nối Đối tượng), `Tổng giá trị Hợp đồng` (Tiền tệ), `Ngày bắt đầu`, `Ngày dự kiến kết thúc`.
+    - **`Thiết kế (Design)`**: Quản lý các hạng mục thiết kế 3D, 2D.
+      - _Các trường dữ liệu chính_: `Tên hạng mục`, `Người phụ trách` (Người dùng), `File đính kèm`, `Trạng thái duyệt`.
+    - **`Báo cáo Thi công (Site Report)`**: Ghi nhận tiến độ và hình ảnh từ công trường.
+      - _Các trường dữ liệu chính_: `Ngày báo cáo`, `Nội dung`, `Hình ảnh hiện trạng`.
+    - **`Hợp đồng (Contract)`**: Lưu trữ thông tin hợp đồng.
+      - _Các trường dữ liệu chính_: `Số hợp đồng`, `File hợp đồng`, `Giá trị`.
+    - **`Hóa đơn (Invoice)`**: Quản lý các đợt thanh toán của dự án.
+      - _Các trường dữ liệu chính_: `Tên đợt thanh toán`, `Số tiền`, `Hạn thanh toán`, `Trạng thái`.
+
+    ### **`3. Object Connections`**
+
+    - Một `Dự án` sẽ được kết nối với nhiều `Thiết kế`, nhiều `Báo cáo Thi công`, và nhiều `Hóa đơn`. Mọi thứ đều quy về một `Dự án` duy nhất.
+
+    ### **`4. Workflows & Trạng thái`**
+
+    - **`Quy trình duyệt Thiết kế`**:
+      - `MỚI TẠO` → `ĐANG THỰC HIỆN` → `CHỜ KHÁCH DUYỆT` → `ĐÃ DUYỆT` → `CẦN CHỈNH SỬA`
+    - **`Quy trình Hóa đơn`**:
+      - `CHƯA THANH TOÁN` (Trạng thái thường) → `ĐÃ THANH TOÁN` (Trạng thái thành công)
+
+    ### **`5. Workviews & Dashboards`**
+
+    - **"Tổng quan các Dự án (Timeline)"**: Một `Mảng xem` dạng timeline để Ban Giám đốc thấy được tiến độ của tất cả các dự án.
+    - **"Duyệt Thiết kế (Kanban)"**: Một `Mảng xem` dạng Kanban cho team Thiết kế, nhóm các hạng mục theo trạng thái duyệt.
+  </Tab>
+  <Tab title="Hướng Dẫn Xây Dựng Chi Tiết">
+    ```guidejar
+    # Hướng Dẫn: Xây Dựng Chức Năng Triển Khai Dự Án
+    
+    ## Phần 1: Tạo Nền tảng Objects
+    
+    1.  **Tạo Chức năng mới**: Trong phần cài đặt workspace, tạo một `Chức năng` mới và đặt tên là "Quản lý Triển khai Dự án".
+    2.  **Vào phần "Object Types"**: Bên trong `Chức năng` mới, chọn "Object Types" ở thanh sidebar bên trái.
+    3.  **Tạo các `Đối tượng`**:
+        - Nhấn "Add Object Type" và lần lượt tạo các `Đối tượng` sau: `Dự án`, `Thiết kế`, `Báo cáo Thi công`, và `Hóa đơn`.
+    
+    ## Phần 2: Cấu hình Data Fields & Connections
+    
+    4.  **Cấu hình `Đối tượng` Dự án**:
+        - Nhấn vào `Đối tượng` "Dự án" để vào phần cấu hình.
+        - Trong tab "Fields", thêm các trường: `Tên Dự án` (Text), `Tổng giá trị Hợp đồng` (Currency), `Ngày bắt đầu` (Date), `Ngày dự kiến kết thúc` (Date).
+    
+    5.  **Tạo liên kết `Dự án` với `Hóa đơn`**:
+        - Vẫn trong cấu hình `Đối tượng` "Dự án", nhấn "Add Field".
+        - Chọn loại trường là **"Object Connection"**.
+        - Đặt tên trường là "Các Hóa đơn".
+        - Trong phần cài đặt, chọn `Đối tượng` để kết nối là "Hóa đơn".
+        - Chọn kiểu quan hệ là "một-nhiều" (Một Dự án có nhiều Hóa đơn).
+        ![Cấu hình trường liên kết Đối tượng](https://path/to/project-invoice-connection.png)
+        - Lặp lại quy trình tương tự để tạo liên kết từ `Dự án` đến `Thiết kế` và `Báo cáo Thi công`.
+    
+    ## Phần 3: Thiết kế Workflows
+    
+    6.  **Mở Trình chỉnh sửa Workflow**: Vào cấu hình của `Đối tượng` "Thiết kế", chọn tab "Workflow".
+    7.  **Tạo các Trạng thái cho quy trình duyệt**:
+        - Nhấn "Add Status" và tạo lần lượt các trạng thái: `MỚI TẠO`, `ĐANG THỰC HIỆN`, `CHỜ KHÁCH DUYỆT`, `ĐÃ DUYỆT`, `CẦN CHỈNH SỬA`.
+    8.  **Thiết lập Phân loại Trạng thái**:
+        - Với trạng thái `ĐÃ DUYỆT`, nhấn vào biểu tượng cài đặt và chọn "Category" là "Success".
+        ![Thiết lập phân loại trạng thái thành công](https://path/to/status-category-success.png)
+    
+    ## Phần 4: Xây dựng Workviews
+    
+    9.  **Vào phần Workviews**: Trong sidebar của `Chức năng`, chọn "Workviews".
+    10. **Tạo "Tổng quan các Dự án (Timeline)"**:
+        - Nhấn "Add Workview" và chọn loại "Timeline".
+        - Đặt tên là "Tổng quan các Dự án".
+        - Chọn `Đối tượng` là "Dự án".
+        - Cấu hình trường "Start Date" là `Ngày bắt đầu` và "End Date" là `Ngày dự kiến kết thúc`.
+        - Lưu lại `Mảng xem`.
+        ![Cấu hình Mảng xem dạng Timeline](https://path/to/timeline-view-config.png)
+    ```
+  </Tab>
+</Tabs>
+
+**Bước Tiếp Theo**
+
+Chúng ta đã xây dựng xong hai `Chức năng` riêng biệt cho Bán hàng và Triển khai Dự án. Giờ là lúc tạo ra sự kỳ diệu bằng cách kết nối chúng lại với nhau bằng `Universal Automation`, loại bỏ hoàn toàn các bước bàn giao thủ công.
+
+- [Tiếp theo: Kết nối các Chức năng với Universal Automation](https://www.google.com/search?q=/build-playbooks/01-flagship-case-study-laika/operating-system/connecting-functions-with-universal-automation)

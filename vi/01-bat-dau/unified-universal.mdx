@@ -1,0 +1,125 @@
+---
+title: "Kiến trúc Hợp nhất & Phổ quát (Unified & Universal)"
+description: "Đi sâu vào hai triết lý kiến trúc cốt lõi của Luklak: Hợp nhất (Unified) và Phổ quát (Universal), và cách chúng giải quyết các vấn đề cố hữu của phần mềm doanh nghiệp truyền thống."
+sidebarTitle: "Hợp nhất & Phổ quát"
+---
+
+import { Card, Columns, Note, Frame, Tip, Tab, Tabs, Tooltip } from 'mintlify/components';
+
+<Note>
+  👑 **Chuyển đổi toàn diện**: "Hợp nhất" và "Phổ quát" không chỉ là các thuật ngữ marketing. Đây là hai nguyên tắc kiến trúc nền tảng, được thiết kế để giải quyết triệt để các vấn đề về sự rời rạc, cứng nhắc và thiếu linh hoạt của các hệ thống cũ, giúp doanh nghiệp nâng cao toàn diện hiệu suất quản trị & vận hành.
+</Note>
+
+<Tabs>
+  <Tab title="HỢP NHẤT (UNIFIED)">
+    #### Hợp nhất mọi chức năng (Unified System)
+
+    > **Trước Luklak:**
+    > ❌ Phải sử dụng 30-50 ứng dụng rời rạc về giao diện, tính năng, và dữ liệu.
+    > ❌ Cùng một nhân sự, phải trả nhiều loại phí người dùng khác nhau cho các app khác nhau.
+    >
+    > **Với Luklak:**
+    > ✅ Mọi <Tooltip tip="Là một bản thiết kế logic, chứa đựng toàn bộ quy trình, dữ liệu, và tự động hóa cho một nghiệp vụ cụ thể.">chức năng</Tooltip> nằm trong một hệ thống vận hành duy nhất. Không còn phải chuyển ứng dụng chóng mặt.
+    > ✅ Mỗi người dùng chỉ cần trả phí cho một slot, có thể dùng mọi chức năng.
+
+    #### Hợp nhất công việc & trò chuyện (Unified Work & Communication)
+
+    <Frame>
+      ![Hợp nhất công việc & trò chuyện](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FT2n2oClkfSEWDkxph6Du%2Fimage.png?alt=media&token=0c38569b-5a59-4101-a3df-5d7e03b3c3cb)
+    </Frame>
+    > **Trước Luklak:**
+    > ❌ Công việc nằm rải rác ở các ứng dụng Task, CRM, HRM,... Khi cần trao đổi lại phải mang sang một nơi khác để chat.
+    > ❌ Ứng dụng chat chỉ thuần túy để chat, không quản lý được công việc.
+    >
+    > **Với Luklak:**
+    > ✅ Trò chuyện hợp nhất ngay trên từng đầu việc.
+    > ✅ Kênh trò chuyện được cấu trúc theo phòng ban và luôn đi kèm với bối cảnh công việc.
+
+    #### Hợp nhất dữ liệu (Unified Data)
+
+    <Frame>
+      ![Hợp nhất dữ liệu](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FogHnLjbifo0lhRFH4iQz%2Fdashboard%20GIF.gif?alt=media&token=bb731b69-6a54-4dc7-82de-3114766561f8)
+    </Frame>
+    > **Trước Luklak:**
+    > ❌ Mỗi ứng dụng là một cơ sở dữ liệu riêng, không có ngôn ngữ chung.
+    > ❌ Dữ liệu chat (phi cấu trúc) tách rời khỏi dữ liệu công việc (có cấu trúc).
+    >
+    > **Với Luklak:**
+    > ✅ Tất cả <Tooltip tip="Là một bản thiết kế logic, chứa đựng toàn bộ quy trình, dữ liệu, và tự động hóa cho một nghiệp vụ cụ thể.">chức năng</Tooltip> đều được tạo ra từ một đơn vị lõi chung là **Universal Object**.
+    > ✅ Báo cáo thông suốt dữ liệu của mọi chức năng, nghiệp vụ.
+    > ✅ Dữ liệu chat gắn chặt với dữ liệu công việc.
+
+    #### Hợp nhất mọi cập nhật (Unified Inbox)
+
+    <Frame>
+      ![Unified Inbox](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FbQbIiMqoLvIxFugBAAJo%2Fimage.png?alt=media&token=2a63e006-6175-4d59-bb23-1c0acdcf557c)
+    </Frame>
+    > **Trước Luklak:**
+    > ❌ Thông báo từ khắp các ứng dụng đổ về, gây hỗn loạn và dễ bỏ sót.
+    >
+    > **Với Luklak:**
+    > ✅ Mọi cập nhật, diễn biến, trao đổi về mọi công việc đều được đổ về một hộp tin duy nhất.
+    > ✅ Các tab phân loại thông tin giúp nắm bắt đúng việc và nhanh chóng.
+  </Tab>
+  <Tab title="PHỔ QUÁT (UNIVERSAL)">
+    #### Đơn vị lõi phổ quát (Universal Object)
+
+    > **Trước Luklak:**
+    > ❌ Mỗi ứng dụng có một cơ sở dữ liệu được "hard-code" sẵn, dùng chung cho hàng nghìn doanh nghiệp.
+    > ❌ Người dùng không thể tự điều chỉnh, chỉ có nhà phát triển/developers mới làm được.
+    >
+    > **Với Luklak:**
+    > ✅ Người dùng tự định nghĩa dữ liệu và nghiệp vụ cho <Tooltip tip="Là một bản thiết kế logic, chứa đựng toàn bộ quy trình, dữ liệu, và tự động hóa cho một nghiệp vụ cụ thể.">chức năng</Tooltip> công việc.
+    > ✅ Người dùng tự thêm, bớt, định nghĩa dữ liệu để phản ánh chính xác nghiệp vụ theo cách họ muốn vận hành.
+
+    <Frame caption="Universal Object - đơn vị lõi phổ quát, trái tim của mọi chức năng được tạo ra với luklak nocode.">
+      ![Universal Object](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FoVw45vMVRZQhNVGFBpve%2Fimage.png?alt=media&token=423ea1c3-9a93-4d37-a4d8-a0380eb933bf)
+    </Frame>
+    #### Việc nào cũng có quy trình (Universal Workflow)
+
+    > **Trước Luklak:**
+    > ❌ Quy trình là một ứng dụng rời riêng, phải vào ứng dụng đó mới làm được.
+    > ❌ Công việc ở các ứng dụng khác thì không có quy trình.
+    >
+    > **Với Luklak:**
+    > ✅ Quy trình được hợp nhất trong cùng một hệ thống với công việc & trò chuyện.
+    > ✅ **Bất kỳ việc nào** cũng có thể được chuẩn hóa bằng quy trình.
+
+    #### Tự động hóa thông suốt (Universal Automation)
+
+    <Frame>
+      ![Universal Automation](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FhF3oSM8lZbpoxaj5kHta%2Fimage.png?alt=media&token=ec88c9de-104f-4749-b003-17a46f3fe704)
+    </Frame>
+    > **Trước Luklak:**
+    > ❌ Tự động hóa chỉ hoạt động cục bộ trong từng ứng dụng nhỏ lẻ.
+    > ❌ Muốn tự động hóa liên phòng ban, cần một ứng dụng trung gian hoặc phải tự tích hợp phức tạp, dễ gây lỗi.
+    >
+    > **Với Luklak:**
+    > ✅ Tự động hóa "sống" trên toàn hệ thống.
+    > ✅ Cho phép kết nối dữ liệu, xử lý logic, và tự động hóa tác vụ thông suốt mọi công việc & phòng ban.
+
+    #### Ngôn ngữ truy vấn phổ quát (Universal Query Language)
+
+    <Frame>
+      ![UQL](https://3530538507-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F9KrtNM7ofVLvcrDpn5Ls%2Fuploads%2FVIAKbjdbiAZQZOgarqFG%2Fimage.png?alt=media&token=555fa286-fa2a-48ba-b079-f10d3e6f33c7)
+    </Frame>
+    > **Trước Luklak:**
+    > ❌ Lọc dữ liệu cục bộ trong từng ứng dụng, có gì dùng nấy.
+    > ❌ Không thể lọc để xem tình hình tổng thể vì mỗi việc một nơi. Nếu muốn, cần làm các quy trình trích xuất dữ liệu (ETL) phức tạp.
+    >
+    > **Với Luklak:**
+    > ✅ Truy vấn & tổng hợp mọi điểm dữ liệu từ **Universal Object** trên toàn hệ thống.
+    > ✅ Ngôn ngữ truy vấn tự nhiên, thân thiện, không cần biết SQL. Không cần làm ETL phức tạp.
+  </Tab>
+</Tabs>
+
+## What's Next?
+
+<Columns cols={2}>
+  <Card title="Quay lại: Định vị Nền tảng" icon="bullseye-arrow" href="/platform-overview/platform-positioning">
+    Xem lại bài viết tổng quan để hiểu rõ vị thế chiến lược của Luklak so với các giải pháp khác trên thị trường.
+  </Card>
+  <Card title="Tiếp theo: Hướng dẫn Xây dựng Chức năng" icon="cogs" href="/tutorials/build-your-first-function">
+    Sau khi hiểu về triết lý, hãy bắt tay vào thực hành với hướng dẫn 7 bước để tự kiến tạo một <Tooltip tip="Là một bản thiết kế logic, chứa đựng toàn bộ quy trình, dữ liệu, và tự động hóa cho một nghiệp vụ cụ thể.">chức năng</Tooltip> quản lý.
+  </Card>
+</Columns>

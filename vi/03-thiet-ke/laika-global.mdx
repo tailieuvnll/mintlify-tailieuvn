@@ -208,58 +208,59 @@ Tự động gửi thông báo dựa trên các bộ lọc đã lưu để đả
 | **Nhắc lịch Chăm sóc Khách hàng** | **Nguồn:** `Customer Success/🧊Chăm sóc`\<br\>**Logic:** `Ngày check-in tiếp theo` trong vòng 3 ngày tới.         | Hàng ngày, lúc 8:00 sáng | - CSKH Agent\<br\>- CSKH Manager       |
 | **Cảnh báo Hợp đồng sắp trễ hạn** | **Nguồn:** `Contract & Invoice/🧊Hợp đồng`\<br\>**Logic:** `Ngày ký dự kiến` đã qua VÀ `Trạng thái` KHÁC "Đã ký". | Hàng ngày, lúc 8:30 sáng | - Sales Executive\<br\>- Sales Manager |
 
-
 ---
+
 ### **PHẦN 5: LOGIC & TỰ ĐỘNG HÓA TOÀN CỤC**
 
 #### **5.1. Tự động hóa Liên Hệ thống (Cross-system Automation)**
-* **Mô tả:** Các quy tắc kết nối Luklak với các ứng dụng và dịch vụ bên ngoài (Website, Google, SEPAY, Email...).
 
-| Rule # | Tên Quy tắc | Mô tả Nghiệp vụ |
-| :--- | :--- | :--- |
-| **CF-01** | Nhận Lead từ Landing Page | Khi khách điền form trên web, **Webhook** sẽ kích hoạt việc tạo `CRM/🧊Khách hàng` và liên kết với `Marketing Campaigns/🧊Ad` nguồn. |
-| **CF-02** | Tạo Lịch hẹn Google Calendar | Sales nhấn nút, hệ thống gửi **HTTP Request** qua N8N để tạo sự kiện trên **Google Calendar**. |
-| **CF-05** | Tạo Hợp đồng Google Docs | Kế toán nhấn nút, hệ thống gửi **HTTP Request** qua N8N để tự động điền thông tin vào template trên **Google Docs**. |
-| **CF-06** | Ghi nhận Thanh toán từ SEPAY | **SEPAY** gửi **Webhook** khi nhận tiền, hệ thống tự động tìm và cập nhật trạng thái `Contract & Invoice/🧊Phiếu thu`. |
-| **CF-10** | Gửi Email Concept cho Khách hàng | Sales nhấn nút, hệ thống tự động soạn và gửi **Email** cá nhân hóa cho khách hàng. |
+- **Mô tả:** Các quy tắc kết nối Luklak với các ứng dụng và dịch vụ bên ngoài (Website, Google, SEPAY, Email...).
+
+| Rule #    | Tên Quy tắc                      | Mô tả Nghiệp vụ                                                                                                                      |
+| :-------- | :------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- |
+| **CF-01** | Nhận Lead từ Landing Page        | Khi khách điền form trên web, **Webhook** sẽ kích hoạt việc tạo `CRM/🧊Khách hàng` và liên kết với `Marketing Campaigns/🧊Ad` nguồn. |
+| **CF-02** | Tạo Lịch hẹn Google Calendar     | Sales nhấn nút, hệ thống gửi **HTTP Request** qua N8N để tạo sự kiện trên **Google Calendar**.                                       |
+| **CF-05** | Tạo Hợp đồng Google Docs         | Kế toán nhấn nút, hệ thống gửi **HTTP Request** qua N8N để tự động điền thông tin vào template trên **Google Docs**.                 |
+| **CF-06** | Ghi nhận Thanh toán từ SEPAY     | **SEPAY** gửi **Webhook** khi nhận tiền, hệ thống tự động tìm và cập nhật trạng thái `Contract & Invoice/🧊Phiếu thu`.               |
+| **CF-10** | Gửi Email Concept cho Khách hàng | Sales nhấn nút, hệ thống tự động soạn và gửi **Email** cá nhân hóa cho khách hàng.                                                   |
 
 #### **5.2. Tự động hóa Liên Chức năng (Cross-function Automation)**
-* **Mô tả:** Các quy tắc điều phối và luân chuyển công việc giữa các bộ phận khác nhau *bên trong* nền tảng Luklak.
 
-| Rule # | Tên Quy tắc | Mô tả Nghiệp vụ |
-| :--- | :--- | :--- |
+- **Mô tả:** Các quy tắc điều phối và luân chuyển công việc giữa các bộ phận khác nhau _bên trong_ nền tảng Luklak.
+
+| Rule #    | Tên Quy tắc                          | Mô tả Nghiệp vụ                                                                                                                       |
+| :-------- | :----------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
 | **CF-03** | Chốt Tư vấn, Tạo Hợp đồng & Khảo sát | Trạng thái của `CRM/🧊Khách hàng` thay đổi sẽ tự động tạo `Contract & Invoice/🧊Hợp đồng` và `Site Survey & Construction/🧊Khảo sát`. |
-| **CF-04** | Hoàn thành Khảo sát, Báo Thiết kế | Trạng thái của `Site Survey & Construction/🧊Khảo sát` thay đổi sẽ tự động gửi thông báo cho team `Interior Design/🧊Thiết kế`. |
-| **CF-07** | Thanh toán Đợt 1, Khởi tạo Dự án | Trạng thái của `Contract & Invoice/🧊Phiếu thu` (Đợt 1) thay đổi sẽ tự động tạo `Project Management/🧊Dự án` mới. |
-| **CF-08** | Dự án được tạo, Giao việc Thiết kế | Trạng thái của `Project Management/🧊Dự án` thay đổi sẽ tự động tạo và liên kết `Interior Design/🧊Thiết kế` mới. |
-| **CF-09** | Thiết kế xong, mời Sales Review | Trạng thái của `Interior Design/🧊Concept` thay đổi sẽ tự động gửi @mention trong Chat cho team Sales. |
-| **CF-11**| Dự án Hoàn thành, Bàn giao CSKH | Trạng thái của `Project Management/🧊Dự án` thay đổi sẽ tự động tạo kế hoạch `Customer Success/🧊Chăm sóc`. |
-| **CF-12**| Hoàn thành Dự án, Tính Voucher | Trạng thái của `Project Management/🧊Dự án` thay đổi sẽ tự động tìm đến `CRM/🧊Khách hàng` liên quan và cập nhật giá trị voucher. |
+| **CF-04** | Hoàn thành Khảo sát, Báo Thiết kế    | Trạng thái của `Site Survey & Construction/🧊Khảo sát` thay đổi sẽ tự động gửi thông báo cho team `Interior Design/🧊Thiết kế`.       |
+| **CF-07** | Thanh toán Đợt 1, Khởi tạo Dự án     | Trạng thái của `Contract & Invoice/🧊Phiếu thu` (Đợt 1) thay đổi sẽ tự động tạo `Project Management/🧊Dự án` mới.                     |
+| **CF-08** | Dự án được tạo, Giao việc Thiết kế   | Trạng thái của `Project Management/🧊Dự án` thay đổi sẽ tự động tạo và liên kết `Interior Design/🧊Thiết kế` mới.                     |
+| **CF-09** | Thiết kế xong, mời Sales Review      | Trạng thái của `Interior Design/🧊Concept` thay đổi sẽ tự động gửi @mention trong Chat cho team Sales.                                |
+| **CF-11** | Dự án Hoàn thành, Bàn giao CSKH      | Trạng thái của `Project Management/🧊Dự án` thay đổi sẽ tự động tạo kế hoạch `Customer Success/🧊Chăm sóc`.                           |
+| **CF-12** | Hoàn thành Dự án, Tính Voucher       | Trạng thái của `Project Management/🧊Dự án` thay đổi sẽ tự động tìm đến `CRM/🧊Khách hàng` liên quan và cập nhật giá trị voucher.     |
 
 ---
-
 
 ### **PHẦN 6: MÔ HÌNH PHÂN QUYỀN**
 
 #### **6.1. Lớp 1: Đặc quyền Doanh nghiệp (Business Privilege)**
 
-  * **Mô tả:** Đây là lớp quyền cao nhất, hoạt động như "thẻ ra vào" toàn bộ hệ thống, xác định quyền hạn tối đa của một người dùng.
+- **Mô tả:** Đây là lớp quyền cao nhất, hoạt động như "thẻ ra vào" toàn bộ hệ thống, xác định quyền hạn tối đa của một người dùng.
 
-| Cấp độ Đặc quyền | Đối tượng tại LAIKA | Mô tả Quyền hạn |
-| :--- | :--- | :--- |
-| **Owner** | CEO | Cấp độ cao nhất. Quản lý thanh toán, có thể chuyển giao quyền sở hữu, và giữ tất cả các đặc quyền của Admin. |
-| **Admin** | COO, Quản trị viên hệ thống | Có thể cấu hình mọi thứ trong hệ thống, từ Cài đặt Toàn cục đến quản lý người dùng. |
-| **App Manager** | Trưởng các Khu vực (VD: Head of Sales, Head of Design...) | Một vai trò chuyên biệt có thể thiết kế, chỉnh sửa và quản lý các Chức năng (Functions) 📋. |
-| **Member** | Tất cả nhân viên còn lại | Đặc quyền tiêu chuẩn cho hầu hết người dùng, cho phép họ làm việc trong các Mảng việc (Spaces) ⏹️ mà họ được cấp quyền truy cập. |
+| Cấp độ Đặc quyền | Đối tượng tại LAIKA                                       | Mô tả Quyền hạn                                                                                                                  |
+| :--------------- | :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------- |
+| **Owner**        | CEO                                                       | Cấp độ cao nhất. Quản lý thanh toán, có thể chuyển giao quyền sở hữu, và giữ tất cả các đặc quyền của Admin.                     |
+| **Admin**        | COO, Quản trị viên hệ thống                               | Có thể cấu hình mọi thứ trong hệ thống, từ Cài đặt Toàn cục đến quản lý người dùng.                                              |
+| **App Manager**  | Trưởng các Khu vực (VD: Head of Sales, Head of Design...) | Một vai trò chuyên biệt có thể thiết kế, chỉnh sửa và quản lý các Chức năng (Functions) 📋.                                      |
+| **Member**       | Tất cả nhân viên còn lại                                  | Đặc quyền tiêu chuẩn cho hầu hết người dùng, cho phép họ làm việc trong các Mảng việc (Spaces) ⏹️ mà họ được cấp quyền truy cập. |
 
 #### **6.2. Lớp 2: Nguyên tắc Phân quyền Truy cập Tiện ích (Principles for Item Access)**
 
-  * **Mô tả:** Các nguyên tắc này đóng vai trò là kim chỉ nam để Quản trị viên gán quyền truy cập vào các "vùng chứa" công việc và tài sản chung.
+- **Mô tả:** Các nguyên tắc này đóng vai trò là kim chỉ nam để Quản trị viên gán quyền truy cập vào các "vùng chứa" công việc và tài sản chung.
 
-| Loại Tiện ích (Item) | Nguyên tắc Phân quyền (Permission Principle) | Lý do & Lợi ích |
-| :--- | :--- | :--- |
-| **📂 Khu vực (Areas)** | - **Admin:** CEO, COO\<br\>- **Manager:** Trưởng Khu vực tương ứng\<br\>- **Member:** Nhóm phòng ban tương ứng | Tạo môi trường làm việc tập trung cho từng phòng ban, giảm thiểu sự lộn xộn và tăng hiệu quả điều hướng. |
-| **👥 Nhóm (Groups)** | - **Manager:** Trưởng phòng ban của Nhóm đó\<br\>- **Member:** Tất cả thành viên trong Nhóm | Trao quyền cho trưởng phòng tự quản lý thành viên trong team của mình, tăng tính chủ động và giảm tải cho Admin hệ thống. |
-| **Báo cáo & Bộ lọc** | - **Admin:** Người tạo ra báo cáo/bộ lọc, CEO, COO\<br\>- **Manager:** Các Trưởng Khu vực có liên quan\<br\>- **Member:** Các Nhóm hoặc cá nhân được chia sẻ | Đảm bảo dữ liệu tổng hợp và các chỉ số kinh doanh nhạy cảm chỉ được chia sẻ với đúng đối tượng. |
-| **📋 Chức năng (Functions)** | - **Admin:** Quản trị viên hệ thống, CEO, COO\<br\>- **Manager:** Người có Đặc quyền `App Manager`\<br\>- **Member:** Hầu hết nhân viên | Quản trị chặt chẽ các quy trình nghiệp vụ cốt lõi, trong khi vẫn cho phép các Trưởng bộ phận linh hoạt tinh chỉnh và nhân viên áp dụng vào công việc. |
-| **⏹️ Mảng việc (Spaces)** | - **Admin:** Trưởng dự án hoặc Trưởng nhóm phụ trách\<br\>- **Member:** Tất cả thành viên được mời vào Mảng việc | Đảm bảo người chịu trách nhiệm chính có toàn quyền quản lý không gian làm việc của dự án hoặc của nhóm mình. |
+| Loại Tiện ích (Item)         | Nguyên tắc Phân quyền (Permission Principle)                                                                                                                 | Lý do & Lợi ích                                                                                                                                       |
+| :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **📂 Khu vực (Areas)**       | - **Admin:** CEO, COO\<br\>- **Manager:** Trưởng Khu vực tương ứng\<br\>- **Member:** Nhóm phòng ban tương ứng                                               | Tạo môi trường làm việc tập trung cho từng phòng ban, giảm thiểu sự lộn xộn và tăng hiệu quả điều hướng.                                              |
+| **👥 Nhóm (Groups)**         | - **Manager:** Trưởng phòng ban của Nhóm đó\<br\>- **Member:** Tất cả thành viên trong Nhóm                                                                  | Trao quyền cho trưởng phòng tự quản lý thành viên trong team của mình, tăng tính chủ động và giảm tải cho Admin hệ thống.                             |
+| **Báo cáo & Bộ lọc**         | - **Admin:** Người tạo ra báo cáo/bộ lọc, CEO, COO\<br\>- **Manager:** Các Trưởng Khu vực có liên quan\<br\>- **Member:** Các Nhóm hoặc cá nhân được chia sẻ | Đảm bảo dữ liệu tổng hợp và các chỉ số kinh doanh nhạy cảm chỉ được chia sẻ với đúng đối tượng.                                                       |
+| **📋 Chức năng (Functions)** | - **Admin:** Quản trị viên hệ thống, CEO, COO\<br\>- **Manager:** Người có Đặc quyền `App Manager`\<br\>- **Member:** Hầu hết nhân viên                      | Quản trị chặt chẽ các quy trình nghiệp vụ cốt lõi, trong khi vẫn cho phép các Trưởng bộ phận linh hoạt tinh chỉnh và nhân viên áp dụng vào công việc. |
+| **⏹️ Mảng việc (Spaces)**    | - **Admin:** Trưởng dự án hoặc Trưởng nhóm phụ trách\<br\>- **Member:** Tất cả thành viên được mời vào Mảng việc                                             | Đảm bảo người chịu trách nhiệm chính có toàn quyền quản lý không gian làm việc của dự án hoặc của nhóm mình.                                          |

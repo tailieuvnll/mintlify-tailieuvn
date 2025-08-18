@@ -1,0 +1,291 @@
+---
+title: "Bản thiết kế toàn cục - LAIKA"
+description: "Description of your new file."
+---
+
+## **CẤU TRÚC TỔ CHỨC & CÁC PHÒNG LÀM VIỆC**
+
+<Tabs>
+  <Tab title="Cấu trúc Tổ chức hợp nhất">
+    <Info>
+      Sơ đồ thể hiện sự phân cấp rõ ràng của các đơn vị chức năng và các loại nghiệp vụ trong hệ thống. Định dạng này đặt Chức năng (bản thiết kế) ngay dưới Mảng việc (nơi thực thi) để làm rõ mối quan hệ giữa chúng.
+    </Info>
+    ```plaintext
+    🏢 LAIKA (Tổ chức)
+    │
+    ├── 📂 MARKETING (Khu vực)
+    │   └── ⏹️ Marketing Campaigns (Mảng việc)
+    │       └── 📋 Chức năng: Marketing Campaigns
+    │           └── 🧊 Chiến dịch
+    │               └── 🧊︎ Ad (Loại việc con)
+    │
+    ├── 📂 KINH DOANH (Khu vực)
+    │   └── ⏹️ Sales & CRM (Mảng việc)
+    │       └── 📋 Chức năng: CRM
+    │           └── 🧊 Khách hàng
+    │
+    ├── 📂 KẾ TOÁN (Khu vực)
+    │   └── ⏹️ Hợp đồng & Phiếu thu (Mảng việc)
+    │       └── 📋 Chức năng: Contract & Invoice
+    │           └── 🧊 Hợp đồng
+    │               └── 🧊︎ Phiếu thu (Loại việc con)
+    │
+    ├── 📂 THIẾT KẾ & THI CÔNG (Khu vực)
+    │   ├── ⏹️ Quản lý dự án (Mảng việc)
+    │   │   └── 📋 Chức năng: Project Management
+    │   │       └── 🧊 Dự án
+    │   │
+    │   ├── ⏹️ Thiết kế (Mảng việc)
+    │   │   └── 📋 Chức năng: Interior Design
+    │   │       └── 🧊 Thiết kế
+    │   │           ├── 🧊︎ Bố trí công năng
+    │   │           ├── 🧊︎ Concept
+    │   │           ├── 🧊︎ 3D
+    │   │           ├── 🧊︎ 2D
+    │   │           └── 🧊︎ Chỉnh sửa
+    │   │
+    │   └── ⏹️ Thi công Nội thất (Mảng việc)
+    │       └── 📋 Chức năng: Site Survey & Construction
+    │           ├── 🧊 Khảo sát
+    │           │   └── 🧊︎ Hạn chế (Loại việc con)
+    │           └── 🧊 Thi công
+    │
+    └── 📂 CSKH (Khu vực)
+        └── ⏹️ Chăm sóc khách hàng (Mảng việc)
+            └── 📋 Chức năng: Customer Success
+                └── 🧊 Chăm sóc
+    ```
+  </Tab>
+  <Tab title="Danh sách Phòng làm việc">
+    <Info>
+      Các không gian làm việc ảo được thiết kế để phục vụ các nhóm người dùng hoặc mục tiêu cụ thể, giúp tập trung vào công việc liên quan bằng cách tổng hợp các tiện ích cần thiết.
+    </Info>
+    | Tên Workspace          | Mục đích & Lý do thiết kế (Design Rationale)                                                                             | Items bao gồm (Dashboards, Filters, Spaces)                                                                                              |
+    | :--------------------- | :----------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
+    | **Ban Lãnh Đạo**       | Tập hợp các chỉ số và báo cáo chiến lược, giúp ban lãnh đạo giám sát toàn bộ hoạt động mà không cần điều hướng phức tạp. | - **Dashboard**: Tổng quan Kinh doanh<br />- **Filter**: Các dự án lớn (\>500M)<br />- **Space (Read-only)**: Sales & CRM, Quản lý dự án |
+    | **Vận hành Doanh thu** | Không gian làm việc chung cho Marketing, Sales, CSKH để theo dõi phễu khách hàng từ đầu đến cuối và phối hợp liền mạch.  | - **Space**: Marketing Campaigns, Sales & CRM, Chăm sóc khách hàng<br />- **Filter**: Khách hàng VIP                                     |
+    | **Triển khai Dự án**   | Nơi tập trung cho Quản lý dự án, Thiết kế, Thi công để điều phối tất cả các dự án đang hoạt động.                        | - **Space**: Quản lý dự án                                                                                                               |
+  </Tab>
+</Tabs>
+
+---
+
+## **QUẢN LÝ NGƯỜI DÙNG**
+
+<Tabs>
+  <Tab title="Quản lý Tài khoản">
+    <Info>
+      Hệ thống sử dụng hai loại tài khoản để phân biệt rõ ràng giữa hành động của con người và của hệ thống tự động.
+    </Info>
+    | Loại Tài khoản                               | Mô tả                                                                                                                                                              | Áp dụng tại LAIKA                                                                                       |
+    | :------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------ |
+    | **Tài khoản Người dùng (User Account)**      | Là tài khoản tiêu chuẩn cho các thành viên trong đội ngũ, được liên kết với một người cụ thể đăng nhập vào nền tảng để làm việc và cộng tác.                       | Dành cho tất cả nhân viên của LAIKA.                                                                    |
+    | **Tài khoản Chức năng (Functional Account)** | Là một tài khoản đặc biệt, không dùng để đăng nhập, được sử dụng riêng cho Tự động hóa Phổ quát (Universal Automation) để đảm bảo có một dấu vết kiểm tra rõ ràng. | Một tài khoản duy nhất `automation@laika.com` sẽ được tạo để thực thi các quy tắc tự động hóa toàn cục. |
+  </Tab>
+  <Tab title="Nhóm Toàn cục">
+    <Info>
+      Nhóm là một tập hợp các tài khoản người dùng, được sử dụng để gán quyền truy cập và thông báo một cách hiệu quả trên quy mô lớn.
+    </Info>
+    | Tên Nhóm                          | Mô tả & Thành viên (Ví dụ)                              |
+    | :-------------------------------- | :------------------------------------------------------ |
+    | `Marketing Department`            | Bao gồm các thành viên thuộc phòng Marketing.           |
+    | `Sales Department`                | Bao gồm các nhân viên kinh doanh.                       |
+    | `Accounting Department`           | Bao gồm các nhân viên kế toán.                          |
+    | `Project Management Office (PMO)` | Bao gồm các Quản lý dự án.                              |
+    | `Design Department`               | Bao gồm các Trưởng nhóm Thiết kế và nhân viên thiết kế. |
+    | `Construction Team`               | Bao gồm các Giám sát công trường và nhân viên thi công. |
+    | `Customer Success Team`           | Bao gồm các nhân viên chăm sóc khách hàng.              |
+    | `Board of Directors`              | Bao gồm CEO, COO và các quản lý cấp cao.                |
+  </Tab>
+  <Tab title="Vai trò Toàn cục">
+    <Info>
+      Vai trò là một chức danh hoặc placeholder trừu tượng (ví dụ: "Project Manager") không gắn liền với một người dùng hay nhóm cụ thể. Quyền hạn sẽ được gán cho Vai trò, sau đó người dùng/nhóm thực tế sẽ được gán vào Vai trò đó trong từng Mảng việc (Space) cụ thể.
+    </Info>
+    | Tên Vai trò         | Mô tả Trách nhiệm Cốt lõi                                       |
+    | :------------------ | :-------------------------------------------------------------- |
+    | `Marketing Manager` | Quản lý chiến dịch, ngân sách quảng cáo và hiệu suất marketing. |
+    | `Sales Executive`   | Chăm sóc và tư vấn khách hàng, chốt hợp đồng.                   |
+    | `Project Manager`   | Điều phối toàn bộ dự án, đảm bảo tiến độ và chất lượng.         |
+    | `Design Lead`       | Chịu trách nhiệm về chất lượng và định hướng thiết kế.          |
+    | `Site Supervisor`   | Giám sát các hoạt động khảo sát và thi công tại công trường.    |
+    | `Accountant`        | Quản lý hợp đồng, công nợ và các vấn đề tài chính.              |
+    | `CSKH Agent`        | Chăm sóc khách hàng sau khi dự án hoàn thành.                   |
+  </Tab>
+</Tabs>
+
+---
+
+## **MÔ HÌNH QUAN HỆ ĐỐI TƯỢNG**
+
+<Tabs>
+  <Tab title="Quan hệ Cha-con">
+    <Info>
+      Một hệ thống phân cấp chặt chẽ, được tích hợp sẵn giữa một `Object` tiêu chuẩn và các `Sub-Objects` của nó. Phương pháp này phù hợp nhất cho các cấu trúc phân rã công việc.
+    </Info>
+    **Áp dụng tại LAIKA:**
+
+    | Object Cha (Parent)                     | Object Con (Child)                                                               | Lý do & Mô tả Kiến trúc (Architectural Rationale)                                                                                     |
+    | :-------------------------------------- | :------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+    | `Marketing Campaigns/🧊Chiến dịch`      | `Marketing Campaigns/🧊Ad`                                                       | **Cấu trúc phân rã công việc:** Mỗi `Chiến dịch` là một kế hoạch lớn, bao gồm nhiều `Ad` (quảng cáo) cụ thể bên trong.                |
+    | `Contract & Invoice/🧊Hợp đồng`         | `Contract & Invoice/🧊Phiếu thu`                                                 | **Cấu trúc phân rã tài chính:** Một `Hợp đồng` có tổng giá trị được chia thành nhiều `Phiếu thu` tương ứng với các đợt thanh toán.    |
+    | `Site Survey & Construction/🧊Khảo sát` | `Site Survey & Construction/🧊Hạn chế`                                           | **Cấu trúc phân rã công việc:** Một buổi `Khảo sát` tại hiện trường có thể phát hiện và ghi nhận nhiều `Hạn chế` (vấn đề cần xử lý).  |
+    | `Interior Design/🧊Thiết kế`            | `Interior Design/🧊Bố trí công năng`, `🧊Concept`, `🧊3D`, `🧊2D`, `🧊Chỉnh sửa` | **Cấu trúc phân rã công việc:** Một gói `Thiết kế` tổng thể được chia thành các hạng mục con tương ứng với từng giai đoạn triển khai. |
+  </Tab>
+  <Tab title="Kết nối Toàn cục">
+    <Info>
+      Một thư viện các _loại_ quan hệ có thể tái sử dụng, được quản lý tập trung để chuẩn hóa _ý nghĩa_ của các mối quan hệ hai chiều trên toàn bộ hệ thống.
+    </Info>
+    **Áp dụng tại LAIKA:** Đây là nơi định nghĩa các mối liên kết nghiệp vụ cốt lõi xuyên suốt các phòng ban.
+
+    | Loại Kết nối             | Object A                        | Quan hệ A → B        | Object B                                | Quan hệ B → A             |
+    | :----------------------- | :------------------------------ | :------------------- | :-------------------------------------- | :------------------------ |
+    | **Marketing → Sales**    | `Marketing Campaigns/🧊Ad`      | Tạo ra (Generates)   | `CRM/🧊Khách hàng`                      | Nguồn từ (Sourced from)   |
+    | **Sales ↔ Accounting**   | `CRM/🧊Khách hàng`              | Sở hữu (Owns)        | `Contract & Invoice/🧊Hợp đồng`         | Dành cho (For)            |
+    | **Accounting → Project** | `Contract & Invoice/🧊Hợp đồng` | Khởi tạo (Initiates) | `Project Management/🧊Dự án`            | Bắt đầu từ (From)         |
+    | **Project ↔ Design**     | `Project Management/🧊Dự án`    | Bao gồm (Contains)   | `Interior Design/🧊Thiết kế`            | Là một phần của (Part of) |
+    | **Project ↔ Survey**     | `Project Management/🧊Dự án`    | Yêu cầu (Requires)   | `Site Survey & Construction/🧊Khảo sát` | Phục vụ cho (Serves)      |
+    | **Project → CS**         | `Project Management/🧊Dự án`    | Dẫn đến (Leads to)   | `Customer Success/🧊Chăm sóc`           | Dành cho (For)            |
+  </Tab>
+  <Tab title="Trường Chọn Đối tượng">
+    <Info>
+      Một trường linh hoạt cho phép một `Object` tham chiếu đến một hoặc nhiều `Object` khác. Đây là công cụ _thực thi_ cho các mối quan hệ đã được định nghĩa ở trên.
+    </Info>
+    **Áp dụng tại LAIKA:**
+
+    | Đặt trên Object                 | Tên Trường Dữ liệu | Loại Tham chiếu                        | Mục đích                                                         |
+    | :------------------------------ | :----------------- | :------------------------------------- | :--------------------------------------------------------------- |
+    | `CRM/🧊Khách hàng`              | `Nguồn Ad`         | Chọn 1 `Marketing Campaigns/🧊Ad`      | Lưu lại quảng cáo đã mang khách hàng đến để đo lường hiệu quả.   |
+    | `Contract & Invoice/🧊Hợp đồng` | `Khách hàng`       | Chọn 1 `CRM/🧊Khách hàng`              | Chỉ định hợp đồng này thuộc về khách hàng nào.                   |
+    | `Project Management/🧊Dự án`    | `Hợp đồng Gốc`     | Chọn 1 `Contract & Invoice/🧊Hợp đồng` | Liên kết dự án về hợp đồng đã ký để tham chiếu phạm vi, giá trị. |
+    | `Interior Design/🧊Thiết kế`    | `Thuộc Dự án`      | Chọn 1 `Project Management/🧊Dự án`    | Gán gói thiết kế vào một dự án tổng thể đang được quản lý.       |
+    | `Customer Success/🧊Chăm sóc`   | `Dự án liên quan`  | Chọn 1 `Project Management/🧊Dự án`    | Liên kết kế hoạch chăm sóc với dự án đã hoàn thành.              |
+  </Tab>
+  <Tab title="Trường Bảng dữ liệu">
+    <Info>
+      Một 'bảng tính' được nhúng trong một `Object` để quản lý các danh sách dữ liệu có cấu trúc, phù hợp để mô hình hóa dữ liệu một-nhiều 'được chứa đựng'.
+    </Info>
+    **Áp dụng tại LAIKA:**
+
+    | Sử dụng trên Object             | Tên Bảng Dữ liệu                 | Cấu trúc Cột (Ví dụ)                                                        | Lý do & Lợi ích                                                                                                                                             |
+    | :------------------------------ | :------------------------------- | :-------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `Contract & Invoice/🧊Hợp đồng` | `Lịch trình Thanh toán`          | `Tên đợt`, `Số tiền`, `Hạn thanh toán`, `Trạng thái`, `Phiếu thu liên quan` | Cung cấp một cái nhìn tổng quan, có cấu trúc về toàn bộ lịch trình thanh toán ngay trên Hợp đồng. Dễ dàng tính toán tổng số tiền đã thu và công nợ còn lại. |
+    | `Interior Design/🧊Thiết kế`    | `Bảng vật liệu & Thiết bị (BOM)` | `Hạng mục`, `Nhà cung cấp`, `Đơn giá`, `Số lượng`, `Thành tiền`             | Giúp các nhà thiết kế và quản lý dự án quản lý ngân sách chi tiết cho từng hạng mục vật tư, thiết bị ngay trên gói thiết kế.                                |
+  </Tab>
+</Tabs>
+
+---
+
+## **GIAO DIỆN LÀM VIỆC, BÁO CÁO, BỘ LỌC & NHẮC VIỆC**
+
+<Info>
+  Phần này định nghĩa các công cụ tổng hợp và trình bày dữ liệu xuyên suốt các chức năng, giúp người dùng làm việc hiệu quả và ban lãnh đạo đưa ra quyết định dựa trên thông tin toàn cảnh.
+</Info>
+
+<Tabs>
+  <Tab title="Giao diện làm việc Toàn cục">
+    <Info>
+      Đây là các màn hình làm việc được lưu sẵn ở cấp Toàn cục, tổng hợp các đầu việc từ nhiều Mảng việc khác nhau để phục vụ mục đích điều hành.
+    </Info>
+    | Tên Giao diện làm việc           | Loại Giao diện        | Nguồn Dữ liệu & Logic Lọc                                                                          | Đối tượng Sử dụng                        |
+    | :------------------------------- | :-------------------- | :------------------------------------------------------------------------------------------------- | :--------------------------------------- |
+    | **Toàn bộ Dự án Đang hoạt động** | Danh sách (List View) | **Nguồn:** `Project Management/🧊Dự án`<br />**Logic:** `Trạng thái` KHÁC "Hoàn thành" VÀ "Đã hủy" | COO, Ban Giám đốc, Toàn bộ Quản lý Dự án |
+  </Tab>
+  <Tab title="Báo cáo Toàn cục">
+    <Info>
+      Báo cáo này được đặt trong Workspace "Ban Lãnh Đạo" để cung cấp cái nhìn 360 độ về hiệu quả kinh doanh.
+    </Info>
+    | Tên Báo cáo                              | Mục đích & Đối tượng sử dụng                                                                                   |
+    | :--------------------------------------- | :------------------------------------------------------------------------------------------------------------- |
+    | **Tổng quan Kinh doanh (CEO Dashboard)** | Cung cấp cái nhìn toàn cảnh về phễu bán hàng, dòng tiền, hiệu quả quảng cáo và tiến độ dự án cho Ban Lãnh đạo. |
+
+    **Cấu trúc chi tiết của Báo cáo "Tổng quan Kinh doanh":**
+
+    | STT | Tên Component (Gadget)         | Loại Biểu đồ          | Nguồn Dữ liệu (Functions & Objects)                             | Logic & Chỉ số chính                                                                                                              |
+    | :-- | :----------------------------- | :-------------------- | :-------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
+    | 1   | **Phễu chuyển đổi Khách hàng** | Funnel Chart          | `CRM/🧊Khách hàng`                                              | Đếm số lượng `Khách hàng` theo từng `Trạng thái` (Mới, Đang tư vấn, Chốt hợp đồng...) để tính tỷ lệ chuyển đổi.                   |
+    | 2   | **Doanh thu & Công nợ**        | Counter & Calculation | `Contract & Invoice/🧊Phiếu thu`                                | - **Doanh thu**: `SUM(Số tiền)` WHERE `Trạng thái` = "Đã thu".<br />- **Công nợ**: `SUM(Số tiền)` WHERE `Trạng thái` = "Cần thu". |
+    | 3   | **Top Ad theo Doanh thu**      | Pie Chart             | `Contract & Invoice/🧊Hợp đồng` liên kết với `CRM/🧊Khách hàng` | `SUM(Tổng giá trị Hợp đồng)` nhóm theo `Nguồn Ad` trên `Khách hàng`.                                                              |
+    | 4   | **Tình hình Tiến độ Dự án**    | Bar Chart             | `Project Management/🧊Dự án`                                    | Đếm số lượng `Dự án` theo từng `Trạng thái` (Lên kế hoạch, Đang thiết kế, Đang thi công...).                                      |
+  </Tab>
+  <Tab title="Bộ lọc Toàn cục">
+    <Info>
+      Các bộ lọc được lưu sẵn giúp người dùng nhanh chóng truy cập các danh sách đầu việc quan trọng.
+    </Info>
+    | Tên Bộ lọc                 | Nguồn Dữ liệu & Logic Lọc                                                             | Mục đích & Đối tượng sử dụng                                                                   |
+    | :------------------------- | :------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------- |
+    | **Các dự án lớn (\>500M)** | **Nguồn:** `Project Management/🧊Dự án`<br />**Logic:** `Tổng giá trị` \> 500,000,000 | Giúp Ban lãnh đạo và Quản lý dự án tập trung theo dõi các hợp đồng quan trọng.                 |
+    | **Khách hàng VIP**         | **Nguồn:** `CRM/🧊Khách hàng`<br />**Logic:** `Số lượng dự án đã hoàn thành` \>= 2    | Lọc danh sách khách hàng thân thiết để team CSKH và Marketing có chính sách chăm sóc đặc biệt. |
+  </Tab>
+  <Tab title="Nhắc việc Bộ lọc">
+    <Info>
+      Tự động gửi thông báo dựa trên các bộ lọc đã lưu để đảm bảo không bỏ sót công việc quan trọng.
+    </Info>
+    | Tên quy tắc nhắc việc             | Nguồn Dữ liệu & Bộ lọc sử dụng                                                                                    | Tần suất & Thời gian     | Người nhận (Vai trò/Nhóm)              |
+    | :-------------------------------- | :---------------------------------------------------------------------------------------------------------------- | :----------------------- | :------------------------------------- |
+    | **Nhắc lịch Chăm sóc Khách hàng** | **Nguồn:** `Customer Success/🧊Chăm sóc`<br />**Logic:** `Ngày check-in tiếp theo` trong vòng 3 ngày tới.         | Hàng ngày, lúc 8:00 sáng | - CSKH Agent<br />- CSKH Manager       |
+    | **Cảnh báo Hợp đồng sắp trễ hạn** | **Nguồn:** `Contract & Invoice/🧊Hợp đồng`<br />**Logic:** `Ngày ký dự kiến` đã qua VÀ `Trạng thái` KHÁC "Đã ký". | Hàng ngày, lúc 8:30 sáng | - Sales Executive<br />- Sales Manager |
+  </Tab>
+</Tabs>
+
+---
+
+## **LOGIC & TỰ ĐỘNG HÓA TOÀN CỤC**
+
+<Tabs>
+  <Tab title="Tự động hóa Liên Hệ thống">
+    <Info>
+      Các quy tắc kết nối Luklak với các ứng dụng và dịch vụ bên ngoài (Website, Google, SEPAY, Email...).
+    </Info>
+    | Rule #    | Tên Quy tắc                      | Mô tả Nghiệp vụ                                                                                                                      |
+    | :-------- | :------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- |
+    | **CF-01** | Nhận Lead từ Landing Page        | Khi khách điền form trên web, **Webhook** sẽ kích hoạt việc tạo `CRM/🧊Khách hàng` và liên kết với `Marketing Campaigns/🧊Ad` nguồn. |
+    | **CF-02** | Tạo Lịch hẹn Google Calendar     | Sales nhấn nút, hệ thống gửi **HTTP Request** qua N8N để tạo sự kiện trên **Google Calendar**.                                       |
+    | **CF-05** | Tạo Hợp đồng Google Docs         | Kế toán nhấn nút, hệ thống gửi **HTTP Request** qua N8N để tự động điền thông tin vào template trên **Google Docs**.                 |
+    | **CF-06** | Ghi nhận Thanh toán từ SEPAY     | **SEPAY** gửi **Webhook** khi nhận tiền, hệ thống tự động tìm và cập nhật trạng thái `Contract & Invoice/🧊Phiếu thu`.               |
+    | **CF-10** | Gửi Email Concept cho Khách hàng | Sales nhấn nút, hệ thống tự động soạn và gửi **Email** cá nhân hóa cho khách hàng.                                                   |
+  </Tab>
+  <Tab title="Tự động hóa Liên Chức năng">
+    <Info>
+      Các quy tắc điều phối và luân chuyển công việc giữa các bộ phận khác nhau _bên trong_ nền tảng Luklak.
+    </Info>
+    | Rule #    | Tên Quy tắc                          | Mô tả Nghiệp vụ                                                                                                                       |
+    | :-------- | :----------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+    | **CF-03** | Chốt Tư vấn, Tạo Hợp đồng & Khảo sát | Trạng thái của `CRM/🧊Khách hàng` thay đổi sẽ tự động tạo `Contract & Invoice/🧊Hợp đồng` và `Site Survey & Construction/🧊Khảo sát`. |
+    | **CF-04** | Hoàn thành Khảo sát, Báo Thiết kế    | Trạng thái của `Site Survey & Construction/🧊Khảo sát` thay đổi sẽ tự động gửi thông báo cho team `Interior Design/🧊Thiết kế`.       |
+    | **CF-07** | Thanh toán Đợt 1, Khởi tạo Dự án     | Trạng thái của `Contract & Invoice/🧊Phiếu thu` (Đợt 1) thay đổi sẽ tự động tạo `Project Management/🧊Dự án` mới.                     |
+    | **CF-08** | Dự án được tạo, Giao việc Thiết kế   | Trạng thái của `Project Management/🧊Dự án` thay đổi sẽ tự động tạo và liên kết `Interior Design/🧊Thiết kế` mới.                     |
+    | **CF-09** | Thiết kế xong, mời Sales Review      | Trạng thái của `Interior Design/🧊Concept` thay đổi sẽ tự động gửi @mention trong Chat cho team Sales.                                |
+    | **CF-11** | Dự án Hoàn thành, Bàn giao CSKH      | Trạng thái của `Project Management/🧊Dự án` thay đổi sẽ tự động tạo kế hoạch `Customer Success/🧊Chăm sóc`.                           |
+    | **CF-12** | Hoàn thành Dự án, Tính Voucher       | Trạng thái của `Project Management/🧊Dự án` thay đổi sẽ tự động tìm đến `CRM/🧊Khách hàng` liên quan và cập nhật giá trị voucher.     |
+  </Tab>
+</Tabs>
+
+---
+
+## **MÔ HÌNH PHÂN QUYỀN**
+
+<Tabs>
+  <Tab title="Lớp 1: Đặc quyền Doanh nghiệp">
+    <Info>
+      Đây là lớp quyền cao nhất, hoạt động như "thẻ ra vào" toàn bộ hệ thống, xác định quyền hạn tối đa của một người dùng.
+    </Info>
+    | Cấp độ Đặc quyền | Đối tượng tại LAIKA                                       | Mô tả Quyền hạn                                                                                                                  |
+    | :--------------- | :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------- |
+    | **Owner**        | CEO                                                       | Cấp độ cao nhất. Quản lý thanh toán, có thể chuyển giao quyền sở hữu, và giữ tất cả các đặc quyền của Admin.                     |
+    | **Admin**        | COO, Quản trị viên hệ thống                               | Có thể cấu hình mọi thứ trong hệ thống, từ Cài đặt Toàn cục đến quản lý người dùng.                                              |
+    | **App Manager**  | Trưởng các Khu vực (VD: Head of Sales, Head of Design...) | Một vai trò chuyên biệt có thể thiết kế, chỉnh sửa và quản lý các Chức năng (Functions) 📋.                                      |
+    | **Member**       | Tất cả nhân viên còn lại                                  | Đặc quyền tiêu chuẩn cho hầu hết người dùng, cho phép họ làm việc trong các Mảng việc (Spaces) ⏹️ mà họ được cấp quyền truy cập. |
+  </Tab>
+  <Tab title="Lớp 2: Nguyên tắc Truy cập Tiện ích">
+    <Info>
+      Các nguyên tắc này đóng vai trò là kim chỉ nam để Quản trị viên gán quyền truy cập vào các "vùng chứa" công việc và tài sản chung.
+    </Info>
+    | Loại Tiện ích (Item)         | Nguyên tắc Phân quyền (Permission Principle)                                                                                                                 | Lý do & Lợi ích                                                                                                                                       |
+    | :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **📂 Khu vực (Areas)**       | - **Admin:** CEO, COO<br />- **Manager:** Trưởng Khu vực tương ứng<br />- **Member:** Nhóm phòng ban tương ứng                                               | Tạo môi trường làm việc tập trung cho từng phòng ban, giảm thiểu sự lộn xộn và tăng hiệu quả điều hướng.                                              |
+    | **👥 Nhóm (Groups)**         | - **Manager:** Trưởng phòng ban của Nhóm đó<br />- **Member:** Tất cả thành viên trong Nhóm                                                                  | Trao quyền cho trưởng phòng tự quản lý thành viên trong team của mình, tăng tính chủ động và giảm tải cho Admin hệ thống.                             |
+    | **Báo cáo & Bộ lọc**         | - **Admin:** Người tạo ra báo cáo/bộ lọc, CEO, COO<br />- **Manager:** Các Trưởng Khu vực có liên quan<br />- **Member:** Các Nhóm hoặc cá nhân được chia sẻ | Đảm bảo dữ liệu tổng hợp và các chỉ số kinh doanh nhạy cảm chỉ được chia sẻ với đúng đối tượng.                                                       |
+    | **📋 Chức năng (Functions)** | - **Admin:** Quản trị viên hệ thống, CEO, COO<br />- **Manager:** Người có Đặc quyền `App Manager`<br />- **Member:** Hầu hết nhân viên                      | Quản trị chặt chẽ các quy trình nghiệp vụ cốt lõi, trong khi vẫn cho phép các Trưởng bộ phận linh hoạt tinh chỉnh và nhân viên áp dụng vào công việc. |
+    | **⏹️ Mảng việc (Spaces)**    | - **Admin:** Trưởng dự án hoặc Trưởng nhóm phụ trách<br />- **Member:** Tất cả thành viên được mời vào Mảng việc                                             | Đảm bảo người chịu trách nhiệm chính có toàn quyền quản lý không gian làm việc của dự án hoặc của nhóm mình.                                          |
+  </Tab>
+</Tabs>

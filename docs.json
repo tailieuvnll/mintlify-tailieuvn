@@ -84,7 +84,8 @@
           {
             "group": "Tự động hóa",
             "pages": [
-              "vi/06-khoa-hoc/index"
+              "vi/06-khoa-hoc/index",
+              "vi/06-khoa-hoc/laika-universal-automation"
             ]
           }
         ]

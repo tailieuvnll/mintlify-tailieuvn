@@ -1,0 +1,176 @@
+---
+title: "Chức năng Chiến dịch Marketing"
+---
+
+<Info>
+  **Mục đích:** Tài liệu này mô tả quy trình vận hành nội bộ của `📋 Chức năng` Chiến dịch Marketing, bao gồm việc quản lý các chiến dịch và quảng cáo để tạo ra lead chất lượng trước khi bàn giao cho `📋 Chức năng` Bán hàng.
+</Info>
+
+## **Tầm quan trọng**
+
+<Info>
+  `📋 Chức năng` này chuẩn hóa toàn bộ hoạt động quảng cáo qua một quy trình chung, có thể đo lường. Mọi quảng cáo đều được theo dõi nhất quán nhờ cơ chế tạo UTM tự động, giúp đội ngũ có dữ liệu rõ ràng về hiệu suất. Về mặt chiến lược, điều này giúp tính toán chính xác chi phí trên mỗi lead và lợi tức đầu tư (ROI). Nó cũng giúp tinh gọn khâu tạo và duyệt quảng cáo, giảm bớt thao tác thủ công để đội ngũ tập trung vào việc nâng cao hiệu quả chiến dịch.
+</Info>
+
+## **Tổng quan kiến trúc**
+
+<Info>
+  Về cấu trúc, đây là `📋 Chức năng` khởi đầu cho hành trình của khách hàng, được xây dựng xoay quanh `🧊 Object` chính là `🧊 Chiến dịch Marketing` và `🧊︎ Quảng cáo` (Object con). Đầu ra của `Chức năng` này là một lead chất lượng. Khi một lead được tạo, một `🧊 Khách hàng` mới sẽ tự động được sinh ra trong `📋 Chức năng` CRM kế tiếp. Điều này tạo ra một dòng dữ liệu thông suốt từ quảng cáo đầu tiên cho tới khi chốt bán hàng.
+</Info>
+
+---
+
+## **CÁC LOẠI OBJECT & LUỒNG CÔNG VIỆC**
+
+### **1. 🧊 Chiến dịch Marketing (Object tiêu chuẩn)**
+
+- **Mô tả quy trình**: Đây là nơi quản lý tổng thể cho một sáng kiến marketing. Mỗi chiến dịch sẽ nhóm nhiều `🧊︎ Quảng cáo` lại với nhau, xác định mục tiêu và ngân sách ở cấp cao, đồng thời theo dõi hiệu suất chung của toàn bộ sáng kiến trên các kênh.
+- **Ví dụ**: Chiến dịch _"Scandinavian Simplicity"_, được thiết kế để thu hút lead mới cho dịch vụ thiết kế nội thất tối giản của LAIKA bằng cách giới thiệu sự ấm cúng, tiện dụng và các đường nét tinh gọn.
+
+<Tabs>
+  <Tab title="Luồng công việc">
+    **Luồng công việc của Chiến dịch**
+
+    ![Mermaid Diagram 2025 08 18 115911 Pn](https://mintlify.s3.us-west-1.amazonaws.com/luklak-28b92ec5/images/mermaid-diagram-2025-08-18-115911.png)
+
+    ```
+    CHUẨN BỊ → ĐANG CHẠY ↔ TẠM DỪNG → HOÀN THÀNH
+                     │             ↓
+                     └───────────> THẤT BẠI
+    ```
+  </Tab>
+  <Tab title="Chi tiết Trạng thái">
+    | Trạng thái        | Logic nghiệp vụ                                                                                            | Cài đặt nâng cao                                                                                                                                                                        |
+    | :---------------- | :--------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **1. CHUẨN BỊ**   | Chiến dịch đang trong giai đoạn lên kế hoạch, xác định mục tiêu, ngân sách và chuẩn bị nội dung quảng cáo. | **Quyền chuyển đổi**: Marketing Manager. <br /> **Màn hình nhập liệu**: Yêu cầu nhập các trường chiến lược (Mục tiêu, Ngân sách, Ngày bắt đầu...).                                      |
+    | **2. ĐANG CHẠY**  | Chiến dịch đang hoạt động, các `🧊︎ Quảng cáo` con đang được phân phối và thu thập dữ liệu hiệu suất.      | **Quyền chuyển đổi**: Marketing Manager, Marketing Lead. <br /> **Tự động hóa**: Các chỉ số như Chi phí thực tế và Lượng lead thực tế được tự động tổng hợp từ các `🧊︎ Quảng cáo` con. |
+    | **3. TẠM DỪNG**   | Chiến dịch và các quảng cáo con tạm thời dừng để điều chỉnh hoặc tối ưu.                                   | **Quyền chuyển đổi**: Marketing Manager, Marketing Lead. <br /> **Điều kiện**: Có thể chuyển về trạng thái `ĐANG CHẠY` để tiếp tục chiến dịch.                                          |
+    | **4. HOÀN THÀNH** | Chiến dịch đã kết thúc thành công theo kế hoạch và đạt được các mục tiêu chính.                            | **Quyền chuyển đổi**: Marketing Manager.                                                                                                                                                |
+    | **5. THẤT BẠI**   | Chiến dịch đã dừng trước thời hạn vì hiệu suất không đạt KPI hoặc vì lý do chiến lược khác.                | **Quyền chuyển đổi**: Marketing Manager, Marketing Lead.                                                                                                                                |
+  </Tab>
+  <Tab title="Trường dữ liệu">
+    **Nhóm các trường dữ liệu**
+
+    | Nhóm                                   | Tên trường (Loại)                                                                                                                                                                                   | Ghi chú                                     |
+    | :------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------ |
+    | **Thông tin cơ bản** _(4 Trường)_      | Tên chiến dịch (Text), Ngày bắt đầu (Date), Ngày kết thúc (Date), Trạng thái (Status)                                                                                                               | Thông tin nhận diện cốt lõi của chiến dịch. |
+    | **Ngân sách & Hiệu suất** _(7 Trường)_ | Ngân sách mục tiêu (Currency), Chi phí thực tế (Currency), Lượng lead mục tiêu (Number), Lượng lead thực tế (Number), CPL mục tiêu (Formula), CPL thực tế (Formula), Chênh lệch ngân sách (Formula) | Theo dõi hiệu suất tài chính và tạo lead.   |
+    | **Tổng: 11 Trường**                    |                                                                                                                                                                                                     |                                             |
+  </Tab>
+</Tabs>
+
+---
+
+### **2. 🧊︎ Quảng cáo (Object con)**
+
+- **Mô tả quy trình**: Đại diện cho một nội dung quảng cáo cụ thể, nằm trong một `🧊 Chiến dịch` mẹ. Đây là Object ở cấp độ thực thi, chứa nội dung, hình ảnh, thông số nhắm mục tiêu, và mã theo dõi `ad_key` duy nhất để ghi nhận nguồn lead.
+- **Ví dụ**: Một quảng cáo Facebook cụ thể thuộc chiến dịch _"Scandinavian Simplicity"_, với hình ảnh một phòng khách hiện đại, ngập tràn ánh sáng. `🧊︎ Quảng cáo` này chứa mã định danh `ad_key: MKT-236`, được gắn vào URL để theo dõi mọi lead mà nó tạo ra.
+
+<Tabs>
+  <Tab title="Luồng công việc">
+    **Luồng công việc của Quảng cáo**
+
+    ![Mermaid Diagram 2025 08 18 120028 Pn](https://mintlify.s3.us-west-1.amazonaws.com/luklak-28b92ec5/images/mermaid-diagram-2025-08-18-120028.png)
+
+    ```
+    BẢN NHÁP → CHỜ DUYỆT → ĐÃ DUYỆT → HOẠT ĐỘNG ↔ TẠM DỪNG ┐
+        ↑         ↓                                      ↓
+        └─────── BỊ TỪ CHỐI                             ĐÃ DỪNG
+    ```
+  </Tab>
+  <Tab title="Chi tiết Trạng thái">
+    | Trạng thái        | Logic nghiệp vụ                                                                                                    | Cài đặt nâng cao                                                                                          |
+    | :---------------- | :----------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+    | **1. BẢN NHÁP**   | Giai đoạn soạn thảo quảng cáo. Chuyên viên marketing chuẩn bị nội dung, hình ảnh và các thông số nhắm mục tiêu.    | **Quyền chuyển đổi**: Marketing Specialist (để gửi duyệt).                                                |
+    | **2. CHỜ DUYỆT**  | Quảng cáo đã được gửi để quản lý review nội bộ trước khi được phép chạy.                                           | **Quyền chuyển đổi**: Marketing Manager (để duyệt hoặc từ chối).                                          |
+    | **3. BỊ TỪ CHỐI** | Quảng cáo đã được review nhưng không đạt yêu cầu. Object sẽ được trả về `BẢN NHÁP` kèm theo phản hồi để chỉnh sửa. | **Quyền chuyển đổi**: Marketing Specialist (để chuyển về `BẢN NHÁP` sau khi sửa).                         |
+    | **4. ĐÃ DUYỆT**   | Quảng cáo đã được quản lý duyệt và sẵn sàng để kích hoạt.                                                          | **Quyền chuyển đổi**: Marketing Specialist (để chuyển sang `HOẠT ĐỘNG`).                                  |
+    | **5. HOẠT ĐỘNG**  | Quảng cáo đang chạy trong chiến dịch, bắt đầu sử dụng ngân sách và thu thập dữ liệu hiệu suất.                     | **Quyền chuyển đổi**: Marketing Specialist, Marketing Manager (để `TẠM DỪNG` hoặc `ĐÃ DỪNG`).             |
+    | **6. TẠM DỪNG**   | Quảng cáo đã tạm thời tắt nhưng có thể hoạt động trở lại. Ngân sách không được sử dụng ở trạng thái này.           | **Quyền chuyển đổi**: Marketing Specialist, Marketing Manager (để chuyển lại `HOẠT ĐỘNG` hoặc `ĐÃ DỪNG`). |
+    | **7. ĐÃ DỪNG**    | Quảng cáo đã kết thúc vĩnh viễn và được lưu trữ dưới dạng bản ghi chỉ đọc.                                         | **Đây là trạng thái cuối cùng và không thể thay đổi.**                                                    |
+  </Tab>
+  <Tab title="Trường dữ liệu">
+    | Nhóm                                   | Tên trường (Loại)                                                                                         | Ghi chú                                                                                 |
+    | :------------------------------------- | :-------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------- |
+    | **Thông tin cơ bản** _(5 Trường)_      | Tên quảng cáo (Text), Trạng thái (Status), Kênh (Select), Người phụ trách (User), Mã theo dõi (Text)      | Các thông tin nhận diện cốt lõi của quảng cáo. Mã theo dõi (`ad_key`) được tạo tự động. |
+    | **Nội dung** _(3 Trường)_              | Nội dung quảng cáo (Rich Text), Hình ảnh/Video (File), URL trang đích (URL)                               | Chứa các tài sản sáng tạo và liên kết của quảng cáo.                                    |
+    | **Ngân sách & Hiệu suất** _(4 Trường)_ | Chi phí thực tế (Currency), Lượng lead thực tế (Number), CPL thực tế (Formula), Ngày cập nhật cuối (Date) | Ghi nhận hiệu suất thực tế. Chi phí sẽ được tự động tổng hợp lên `🧊 Chiến dịch` mẹ.    |
+    | **Tổng: 12 Trường**                    |                                                                                                           |                                                                                         |
+  </Tab>
+</Tabs>
+
+## **MỐI QUAN HỆ GIỮA CÁC OBJECT**
+
+| Loại quan hệ | Kết nối                                     | Mô tả                                                                |
+| :----------- | :------------------------------------------ | :------------------------------------------------------------------- |
+| **Cha-Con**  | `🧊 Chiến dịch Marketing` → `🧊︎ Quảng cáo` | Mỗi `🧊 Chiến dịch Marketing` có thể chứa nhiều `🧊︎ Quảng cáo` con. |
+
+---
+
+## **TỰ ĐỘNG HÓA**
+
+<Tabs>
+  <Tab title="Trong Chức năng">
+    <Info>
+      Bảng này mô tả các tự động hóa chạy hoàn toàn bên trong `⏹️ Mảng việc Marketing` để quản lý dữ liệu và hiệu quả chiến dịch.
+    </Info>
+    | ID        | Tên quy tắc                               | Kích hoạt (Trigger)                                        | Hành động (Action)            | Mô tả                                                                                                                                                                                    |
+    | :-------- | :---------------------------------------- | :--------------------------------------------------------- | :---------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **IN-01** | Tạo Mã theo dõi Quảng cáo                 | **Tạo mới**: một `🧊︎ Quảng cáo` mới được tạo              | **Cập nhật**: `🧊︎ Quảng cáo` | Tự động tạo và gán một mã `ad_key` duy nhất cho `🧊︎ Quảng cáo` để phục vụ việc theo dõi từ bên ngoài. <br /><br />_Ví dụ: mã MKT-236 được tạo cho quảng cáo 'Scandinavian Simplicity'_. |
+    | **IN-02** | Tổng hợp Chi phí Quảng cáo lên Chiến dịch | **Cập nhật**: Trường `Chi phí thực tế` của `🧊︎ Quảng cáo` | **Cập nhật**: `🧊 Chiến dịch` | Khi `Chi phí thực tế` của một `🧊︎ Quảng cáo` được cập nhật, quy tắc này sẽ tự động tổng hợp chi phí đó vào trường `Chi phí thực tế` của `🧊 Chiến dịch` mẹ.                             |
+  </Tab>
+  <Tab title="Liên Chức năng">
+    <Info>
+      Bảng này mô tả quy tắc quan trọng giúp chuyển giao dữ liệu từ `⏹️ Marketing Campaigns` sang `⏹️ Sales & CRM`, đảm bảo đội ngũ kinh doanh có đầy đủ thông tin.
+    </Info>
+    | ID        | Tên quy tắc                          | Kích hoạt (Trigger)                     | Hành động (Action)                       | Mô tả                                                                                                                                                                                                                                                            |
+    | :-------- | :----------------------------------- | :-------------------------------------- | :--------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **CF-01** | Gắn kết Lead mới với Quảng cáo nguồn | **Tạo mới**: `Sales & CRM/🧊Khách hàng` | **Cập nhật**: `Sales & CRM/🧊Khách hàng` | Được kích hoạt bởi quy tắc `CS-01`, tự động điền thông tin vào một trường của `🧊 Khách hàng` mới, liên kết nó với `Marketing Campaigns/🧊︎ Quảng cáo` nguồn. _Đây là cách mà lead mới của Sarah được tự động liên kết với quảng cáo 'Scandinavian Simplicity'_. |
+  </Tab>
+  <Tab title="Liên hệ thống">
+    <Info>
+      Bảng này thể hiện quy tắc kết nối một hệ thống bên ngoài (website LAIKA) với nền tảng Luklak, đóng vai trò là cầu nối giữa nỗ lực Marketing và một lead hữu hình.
+    </Info>
+    | ID        | Tên quy tắc                     | Kích hoạt (Trigger)                     | Hành động (Action)                      | Mô tả                                                                                                                                                                                                                    |
+    | :-------- | :------------------------------ | :-------------------------------------- | :-------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **CS-01** | Nhận & Ghi nhận Lead từ Website | **Webhook**: Form trên website được gửi | **Tạo mới**: `Sales & CRM/🧊Khách hàng` | Khi có người điền form trên website, một `🧊 Khách hàng` mới sẽ được tạo trong `⏹️ Sales & CRM`. Tự động hóa này sử dụng `ad_key` thu được từ URL để thực hiện việc chuyển giao được mô tả trong quy tắc `CF-01` ở trên. |
+  </Tab>
+</Tabs>
+
+---
+
+## **GIAO DIỆN LÀM VIỆC, BÁO CÁO, BỘ LỌC & LỜI NHẮC**
+
+<Tabs>
+  <Tab title="Giao diện làm việc (Workviews)">
+    | Giao diện                         | Mô tả                                                                                                                             | Cấu hình dữ liệu                                                     |
+    | :-------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------- |
+    | 1. **Kanban quy trình Quảng cáo** | Hiển thị tất cả các `🧊︎ Quảng cáo` dưới dạng thẻ, được sắp xếp theo các cột trạng thái (Bản nháp, Chờ duyệt, Đang hoạt động...). | Tất cả `🧊︎ Quảng cáo`, nhóm theo trạng thái, sắp xếp theo ngày tạo. |
+  </Tab>
+  <Tab title="Báo cáo (Dashboards)">
+    | Widget                              | Dữ liệu                                                                                                             | Mô tả                                                                                  |
+    | :---------------------------------- | :------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------- |
+    | 1. **Phễu chuyển đổi Lead**         | Theo dõi tỉ lệ chuyển đổi từ lượt hiển thị quảng cáo sang lead được tạo, cho đến hợp đồng được ký (dữ liệu từ CRM). | Phân tích hiệu quả từ đầu đến cuối của quy trình marketing và bán hàng.                |
+    | 2. **Biểu đồ Hiệu suất Chiến dịch** | Biểu đồ cột so sánh `CPL thực tế` (Chi phí trên mỗi Lead) của tất cả các chiến dịch đang ở trạng thái `ĐANG CHẠY`.  | Cung cấp so sánh rõ ràng về các chiến dịch đang tạo ra lead với chi phí hiệu quả nhất. |
+  </Tab>
+  <Tab title="Bộ lọc & Lời nhắc">
+    | Bộ lọc                             | Tiêu chí                                                   | Lời nhắc                                                |
+    | :--------------------------------- | :--------------------------------------------------------- | :------------------------------------------------------ |
+    | 1. **Các chiến dịch kém hiệu quả** | Trạng thái = "ĐANG CHẠY" VÀ CPL thực tế \> CPL mục tiêu.   | Hàng ngày lúc 9:00 sáng cho vai trò Marketing Manager.  |
+    | 2. **Quảng cáo chờ review**        | Trạng thái = "CHỜ DUYỆT" VÀ đã ở trạng thái này \> 24 giờ. | Hàng ngày lúc 10:00 sáng cho vai trò Marketing Manager. |
+  </Tab>
+</Tabs>
+
+## **VAI TRÒ, PHÂN QUYỀN & THÔNG BÁO**
+
+- **Vai trò sử dụng:** Tham chiếu các **Vai trò Toàn cục** đã định nghĩa sẵn: `Marketing Manager`, `Marketing Executive`.
+- **Phương án Phân quyền:** Sử dụng **Phương án Toàn cục 3: Phân quyền Trung bình**.
+- **Phương án Thông báo:** Sử dụng **Phương án Toàn cục 2: Thông báo tất cả bên liên quan**.
+
+---
+
+## **Xem gì tiếp theo?**
+
+- [**Chức năng CRM (Kinh doanh)**](https://claude.ai/chat/path/to/crm-function): Xem điều gì xảy ra ở giai đoạn tiếp theo sau khi chức năng này tạo ra một lead chất lượng.
+
+---

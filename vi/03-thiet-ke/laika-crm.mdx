@@ -1,0 +1,267 @@
+---
+title: "Chức năng CRM"
+---
+
+<Info>
+  **Mục đích:** Tài liệu này định nghĩa logic vận hành của `📋 Chức năng` CRM (Kinh doanh). Nó mô tả chi tiết quy trình từ lúc thu nhận lead cho đến khi chốt hợp đồng và bàn giao.
+</Info>
+
+## **Tầm quan trọng**
+
+<Check>
+  `📋 Chức năng` này chuyển hóa quy trình quản lý lead từ một nỗ lực thủ công, rời rạc thành một cỗ máy tạo doanh thu tinh gọn, tự động. Về mặt chiến lược, nó cung cấp khả năng theo dõi ROI rõ ràng từ chi tiêu quảng cáo đến hợp đồng đã ký. Đối với đội ngũ kinh doanh, nó loại bỏ việc phỏng đoán bằng cách tự động hóa việc phân công lead, chuẩn hóa quy trình chăm sóc, và tích hợp các công cụ thiết yếu như Google Calendar, giúp tăng trực tiếp tỷ lệ chuyển đổi và hiệu suất của đội ngũ.
+</Check>
+
+## **Tổng quan kiến trúc**
+
+<Info>
+  Về mặt kiến trúc, hệ thống này được thiết kế để ghi nhận lead từ các webhook bên ngoài (ví dụ: trang đích), xử lý chúng qua một quy trình có cấu trúc bằng hai `🧊 Object` cốt lõi (`🧊 Khách hàng` và `🧊︎ Demo`), sau đó bàn giao liền mạch các thương vụ thành công cho các `📋 Chức năng` kế tiếp như Hợp đồng và Khảo sát Hiện trạng. Nó dựa vào cả tự động hóa nội bộ để tăng hiệu quả và các lệnh gọi API bên ngoài để tích hợp lịch.
+</Info>
+
+---
+
+### \*\*Xem trước nhanh \*\*
+
+<iframe src="https://www.guidejar.com/embed/2g7ub0Jzke28vejowzNk?type=1&controls=on" width="100%" height="500px" allowfullscreen="true" frameborder="0" />
+
+```expandable
+  🏢 LAIKA (Tổ chức)
+  │
+  ├── 📂 MARKETING (Khu vực)
+  │   └── ⏹️ Marketing Campaigns (Mảng việc)
+  │
+  ├── 📂 KINH DOANH (Khu vực)
+  │   └── ⏹️ Sales & CRM (Mảng việc) //Bạn đang ở đây
+  │         └── 📋 Chức năng: CRM
+  │               └── 🧊 Khách hàng
+  │                   └── 🧊︎ Demo (Object con)
+  │
+  ├── 📂 KẾ TOÁN (Khu vực)
+  │   └── ⏹️ Hợp đồng & Phiếu thu (Mảng việc)
+  ├── 📂 THIẾT KẾ & THI CÔNG (Khu vực)
+  │   ├── ⏹️ Quản lý dự án (Mảng việc)
+  │   ├── ⏹️ Thiết kế (Mảng việc)
+  │   └── ⏹️ Thi công Nội thất (Mảng việc)
+  └── 📂 CSKH (Khu vực)
+      └── ⏹️ Chăm sóc khách hàng (Mảng việc)
+```
+
+## **MỐI QUAN HỆ GIỮA CÁC OBJECT**
+
+| Loại quan hệ            | Kết nối                                      | Mô tả                                                                  |
+| :---------------------- | :------------------------------------------- | :--------------------------------------------------------------------- |
+| **Cha-Con**             | `🧊 Khách hàng` → `🧊︎ Demo`                 | Mỗi `🧊 Khách hàng` có thể có nhiều buổi `🧊︎ Demo`.                   |
+| **Tham chiếu Đầu việc** | `🧊 Khách hàng` (Trường Ad Source) → `🧊 Ad` | Kết nối lead với quảng cáo cụ thể đã tạo ra nó, cho phép theo dõi ROI. |
+
+---
+
+## **CÁC LOẠI OBJECT, LUỒNG CÔNG VIỆC & TRƯỜNG DỮ LIỆU**
+
+### **1. 🧊 Khách hàng (Loại việc tiêu chuẩn)**
+
+- **Mô tả quy trình**: Quản lý khách hàng tiềm năng từ lúc họ được ghi nhận qua webhook của trang đích cho đến khi họ được chuyển đổi thành một hợp đồng đã ký. Quy trình này bao gồm việc phân công tự động và theo dõi tiến độ qua các trạng thái khác nhau.
+- **Ví dụ**: Một khách hàng tiềm năng, "Sarah & Michael Westbrook," được ghi nhận từ chiến dịch quảng cáo "Scandinavian Simplicity", có mã quảng cáo là `MKT-236`. Ngân sách dự kiến của họ được ghi nhận là 40.000$ - 55.000$
+
+<Tabs>
+  <Tab title="Sơ đồ Luồng tiến trình">
+    **Luồng công việc của Khách hàng**
+
+    ![Laika Khach Hang Pn](/images/laika-flagship/crm/laika-khach-hang.png)
+
+    ```
+    LEAD MỚI → LIÊN HỆ LẦN ĐẦU → THƯƠNG LƯỢNG → GỬI BÁO GIÁ → CHUẨN BỊ HỢP ĐỒNG → THẮNG
+        ↓           ↓                 ↓               ↓                   ↓
+       THUA        THUA              THUA            THUA                THUA
+    ```
+  </Tab>
+  <Tab title="Chi tiết Trạng thái">
+    | Trạng thái               | Logic nghiệp vụ                                                                                                        | Cài đặt nâng cao                                                                                                                                             |
+    | :----------------------- | :--------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **1. LEAD MỚI**          | Một khách hàng mới đã được tạo từ form trên website và tự động được gán cho một nhân viên kinh doanh.                  | **Quyền chuyển trạng thái**: Nhân viên KD được gán. <br /> **Nhập liệu**: Object được điền sẵn dữ liệu từ webform, bao gồm cả nguồn quảng cáo.               |
+    | **2. LIÊN HỆ LẦN ĐẦU**   | Nhân viên kinh doanh được gán đã thực hiện liên hệ ban đầu và đang trong quá trình tư vấn tích cực với khách hàng.     | **Quyền chuyển trạng thái**: Nhân viên KD được gán. <br /> **Nhập liệu**: Ghi chú cuộc gọi, nhu cầu khách hàng và sở thích phong cách được ghi lại.          |
+    | **3. THƯƠNG LƯỢNG**      | Khách hàng đã thể hiện sự quan tâm sâu sắc và đang thảo luận về các điều khoản cụ thể, ngân sách và phạm vi công việc. | **Quyền chuyển trạng thái**: Nhân viên KD được gán. <br /> **Nhập liệu**: Cập nhật các trường về điều khoản cụ thể và điều chỉnh giá.                        |
+    | **4. GỬI BÁO GIÁ**       | Một báo giá chính thức đã được gửi đến khách hàng để xem xét.                                                          | **Quyền chuyển trạng thái**: Nhân viên KD được gán.                                                                                                          |
+    | **5. CHUẨN BỊ HỢP ĐỒNG** | Khách hàng đã đồng ý miệng để tiếp tục. Trạng thái này kích hoạt việc bàn giao cho các bộ phận khác.                   | **Tự động hóa**: Kích hoạt việc tạo một `Hợp đồng & Phiếu thu/🧊Hợp đồng` và một `Thiết kế & Thi công/🧊Khảo sát hiện trạng`.                                |
+    | **6. THẮNG**             | Hợp đồng đã được ký và khoản thanh toán đầu tiên đã được nhận. Thương vụ đã thắng lợi.                                 | **Đây là trạng thái thành công cuối cùng.**                                                                                                                  |
+    | **7. THUA**              | Khách hàng quyết định không tiếp tục dự án vào thời điểm này.                                                          | **Quyền chuyển trạng thái**: Nhân viên KD được gán. <br /> **Nhập liệu**: Yêu cầu bắt buộc điền vào trường "Lý do thất bại" để cải thiện phân tích bán hàng. |
+  </Tab>
+  <Tab title="Trường dữ liệu">
+    **Nhóm các trường dữ liệu**
+
+    | Nhóm                                  | Tên trường (Loại)                                                                                                                    | Ghi chú                                          |
+    | :------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------- |
+    | **Thông tin cơ bản** _(6 Trường)_     | Họ và Tên (Text), Số điện thoại (Phone), Email (Email), Địa chỉ (Text), Phong cách ưa thích (Dropdown), Ngân sách dự kiến (Currency) | Thông tin được ghi nhận từ form trên trang đích. |
+    | **Theo dõi & Phân công** _(4 Trường)_ | Nguồn quảng cáo (Object Reference), Mã UTM (Text), Nhân viên phụ trách (User), Ngày nhận (DateTime)                                  | Theo dõi nguồn gốc và việc phân công lead.       |
+    | **Tư vấn & Đánh giá** _(4 Trường)_    | Mức độ quan tâm (Dropdown), Ghi chú tư vấn (Paragraph), Lý do thất bại (Dropdown), Ngày liên hệ cuối (DateTime)                      | Theo dõi quá trình tư vấn.                       |
+    | **Voucher & Ưu đãi** _(3 Trường)_     | Voucher mua hàng lần sau (Currency), % Voucher (Percent), Hạn dùng Voucher (Date)                                                    | Các ưu đãi dành cho khách hàng quay lại.         |
+    | **Tổng: 17 Trường**                   |                                                                                                                                      |                                                  |
+  </Tab>
+</Tabs>
+
+### **2. 🧊︎ Demo (Loại việc con)**
+
+- **Mô tả quy trình**: Quản lý các buổi hẹn tư vấn trực tiếp với khách hàng, được tích hợp hoàn toàn với Google Calendar để đồng bộ lịch và gửi lời mời đến tất cả những người tham gia.
+- **Ví dụ**: Một buổi demo có tiêu đề "LAIKA x Sarah & Michael - Demo Cải tạo Nội thất" được lên lịch vào 2:00 PM ngày 18 tháng 6, với sự tham gia của nhà thiết kế Max và nhân viên kinh doanh David.
+
+<Tabs>
+  <Tab title="Sơ đồ Luồng tiến trình">
+    **Luồng công việc của Demo**
+
+    ![Laika Demo Pn](/images/laika-flagship/crm/laika-demo.png)
+
+    ```
+    ┌──────────> DỜI LỊCH ───────────┐
+    │                                ↓
+    ĐÃ LÊN LỊCH → ĐANG DIỄN RA → HOÀN THÀNH
+    │
+    └──────────> ĐÃ HỦY
+    ```
+  </Tab>
+  <Tab title="Chi tiết Trạng thái">
+    | Trạng thái          | Logic nghiệp vụ                                              | Cài đặt nâng cao                                                                                                                                                                              |
+    | :------------------ | :----------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **1. ĐÃ LÊN LỊCH**  | Một buổi tư vấn đã được đặt vào một thời gian cụ thể.        | **Tự động hóa**: Tạo một sự kiện trên Google Calendar và mời khách hàng, nhân viên kinh doanh và nhà thiết kế. <br /> **Nhập liệu**: Thời gian, địa điểm, người tham gia.                     |
+    | **2. ĐANG DIỄN RA** | Buổi tư vấn trực tiếp đang diễn ra.                          | **Quyền chuyển trạng thái**: Nhân viên KD được gán, Nhà thiết kế. <br /> **Nhập liệu**: Ghi chú trực tiếp được thực hiện trong suốt buổi tư vấn.                                              |
+    | **3. HOÀN THÀNH**   | Buổi hẹn đã kết thúc với kết quả rõ ràng.                    | **Quyền chuyển trạng thái**: Nhân viên KD được gán. <br /> **Tự động hóa**: Có thể cập nhật trạng thái của `🧊 Khách hàng` mẹ tương ứng (ví dụ: sang `THƯƠG LƯỢNG` hoặc `CHUẨN BỊ HỢP ĐỒNG`). |
+    | **4. ĐÃ HỦY**       | Buổi hẹn đã bị hủy bởi khách hàng hoặc đội ngũ.              | **Quyền chuyển trạng thái**: Nhân viên KD được gán. <br /> **Tự động hóa**: Cập nhật sự kiện trên Google Calendar và thông báo cho tất cả người tham gia.                                     |
+    | **5. DỜI LỊCH**     | Buổi hẹn đã được hoãn sang một ngày khác chưa được xác nhận. | **Quyền chuyển trạng thái**: Nhân viên KD được gán. <br /> **Điều kiện**: Nên quay lại trạng thái `ĐÃ LÊN LỊCH` sau khi ngày mới được xác nhận.                                               |
+  </Tab>
+  <Tab title="Trường dữ liệu">
+    **Nhóm các trường dữ liệu**
+
+    | Nhóm                                      | Tên trường (Loại)                                                                                                                                  | Ghi chú                           |
+    | :---------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- |
+    | **Thông tin Buổi hẹn** _(6 Trường)_       | Tiêu đề Demo (Text), Thời gian (DateTime), Địa điểm (Text), Nhà thiết kế tham dự (User), ID Sự kiện Google Calendar (Text), Loại tư vấn (Dropdown) | Các chi tiết cơ bản về buổi hẹn.  |
+    | **Kết quả & Bước tiếp theo** _(4 Trường)_ | Mức độ quan tâm (Dropdown), Ghi chú tư vấn (Paragraph), Các bước tiếp theo (Text), Thời lượng thực tế (Decimal)                                    | Kết quả và các hành động kế tiếp. |
+    | **Tổng: 10 Trường**                       |                                                                                                                                                    |                                   |
+  </Tab>
+</Tabs>
+
+---
+
+## **TỰ ĐỘNG HÓA**
+
+<Tip>
+  Bạn có thể [mở chế độ xem canvas này](https://kroki.io/mermaid/svg/eNqNVc1u20YQvvspBgrQxLCY2pZdJ0JhgKIoRzD1A_3YCIIgWJEremtyVyGX_oHjaw89tEBfoMdee-zz5AXaR-js8lcy5UYHCdqZne-bmW9mDcPYcQVfMr-9AyCvaEjbEFEvucv_XpCIkUVAY-UAsIpYSKJ7SwQiasPLF63jN2av97Jqm9E7WdgPD1pHx2_X7B0ReTQqPE5anW4eIWCc1oaOKbL0qsDWCd46Sq2SRpJVjb2j3nHvJDUuiHvtRyLhnrboT2oJCeOda3_zOMXKDZVIXEi6NTllxDuFze70zJ5dsa1n3WpZVg5IXCmiGiLpub5Xe2UrF211qrW0D2279zbP73NCuUuHSbioMNpAZjdEMsGfp507bck7EGK1lWRAFjToiLu1yxWahf0ZuSiXrQAx8zkJCtMPRycHbzpVU-1NAycir1CXET8iYaoxJgMKjtk_N8EAZ37umOcwfT-d2QP1n97QAFptsCYD6CXcVWWBC0Zv01IlUnBd7p2yQTC8ABJnIaeSLJepcSHuIPIX5NXh8XETyq_918e7a_G1tx4sgvp32YpwCdZ8qqL--8efv4CVxFKECFrn2EXimeM_f_8KXRqKWr-p9U75ff3tL5i6V7gagiwg5d43EB7hFokKynEtxGimIepcvw3EvsMVgB2F6X0saViP4ozPdL0J9xj3YUx8Wut3ZjnK70wIHztukYCqzbPOZogTDeIG6WLUJta8DT1ndAkHWgvEA9P9nLCYaRkgIJioAMOMlfBCyqUOglcN4_R0T1__cEkXV0Jcf_xxEX1_-vXn38GKKEGUtU7CKxSKTOI2tm_sjN4P7OFst2QUMf9KgliCDtklksAyEiEsRRS2dWADOiRmLjCuzvT0ZuemB7FIIpfCdzCfDbLTqbwPaBM6iefTlLVHs8GnCmWnugrSE3WAvyq1LDMRXS8DcQsT1M7HjYS-VDIpUtfVIrpaIAVMsQcxTOhqW6ZlYXHn-MzNc52otW9EYsHyLO27lXosYlqW-Ypwn0Ks66rQGkP7Ehzb7DY03JN81AWO0-5eEalWO1sylxTzWMOueiFlNqMkbEND59XQJwMaxyhIPBzSWwiUhB4e3KxInzgJ6eNj2suHB-J9Sjv1-Nioa0nBulTp8KKJ856J9BBFmo8yWDhpSSB1Atj5DdVDn0uKO7BM76JU7IDypA0dFO1alFLBoxXlsBIrI1mpwmJ7kIpaNFp-1cLuaXYfBoQnOMWmux6nMgn5qioHAfeT3Z07dnf32VoggAbC6UYgc9xXOQZPMDbzx72eTet6Y3UYPWAxOuR6m6lHook_Ic1OzhIaS2SZ672ZirmJSSjJZqtUf2FIxdBIS3G4vw-j85LffOXV8bMVP-h3saLrq3yzGBh156koys3VQlGMRSwNXd20uBlopfGaW0alMjHWaDB27JmdjUxe663jX3TxCxRXNzPFlaxSe_qQbSS1Zeiccg_gxqMeoLw1ZESVUpv6TUZhKiztVWykNC99pnLrTszerD88Q6bD2cS0Zg3At7vRM_vOfGI3NouK4E18z7KqHmFV3-H-1yaMVvfEbVueezrM_27PTXr174fgMkIgnHD9f8rQMk2iG3pfU0ANXGB4SuUsLYguGk50EmBoD0WHOXFcWGLxE3Vl6oNKxCxLSPX8pWqHZZ74681OImTN-P4Hhxnrjw) để đọc dễ hơn
+</Tip>
+
+<Frame>
+  ![Laika Crm Sequence Pn](https://mintlify.s3.us-west-1.amazonaws.com/luklak-28b92ec5/images/laika-flagship-images/function-blueprint/laika-crm-sequence.png)
+</Frame>
+
+<Tabs>
+  <Tab title="Trong Chức năng">
+    Các quy tắc này chạy hoàn toàn bên trong `Mảng việc Sales & CRM` để nâng cao hiệu suất bán hàng và đảm bảo tính nhất quán của quy trình.
+
+    | Thứ tự | ID        | Tên quy tắc               | Kích hoạt (Trigger)                          | Hành động (Action)            | Mô tả                                                                                                                                                                                                                   |
+    | :----- | :-------- | :------------------------ | :------------------------------------------- | :---------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **3**  | **IC-01** | Tính điểm Lead            | **Tạo mới/Cập nhật**: `🧊 Khách hàng`        | **Cập nhật**: `🧊 Khách hàng` | Khi một `🧊 Khách hàng` mới được tạo hoặc dữ liệu chính được cập nhật, một công thức sẽ chạy để cập nhật trường `Điểm Lead`. _Ví dụ, lead của Sarah được tự động cho điểm là 87._                                       |
+    | **4**  | **IC-02** | Tạo Task Chăm sóc ban đầu | **Cập nhật**: `🧊 Khách hàng` được phân công | **Tạo mới**: `☑️ Task`        | Khi một `🧊 Khách hàng` được phân công cho nhân viên kinh doanh, một `☑️ Task` (Object con) sẽ tự động được tạo và giao cho họ, với hạn trong vòng 24 giờ. _Ví dụ: Giao cho David một task để gọi cho Sarah Westbrook._ |
+  </Tab>
+  <Tab title="Liên Chức năng">
+    Các quy tắc này mô tả các bước bàn giao dữ liệu và công việc quan trọng giữa `⏹️ Mảng việc Sales & CRM` và các chức năng khác.
+
+    | Thứ tự | ID        | Hướng | Tên quy tắc                            | Kích hoạt (Trigger)                                                               | Hành động (Action)                                                                                                                                                |
+    | :----- | :-------- | :---- | :------------------------------------- | :-------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **2**  | **CF-01** | `Đến` | Liên kết Lead với Quảng cáo nguồn      | **Tạo mới**: `🧊 Khách hàng` (từ CS-01)                                           | Liên kết `🧊 Khách hàng` mới với `Marketing Campaigns/🧊︎ Quảng cáo` nguồn của nó. _Ví dụ: liên kết lead mới của Sarah với quảng cáo "Scandinavian Simplicity"._  |
+    | **6**  | **CF-03** | `Đi`  | Bàn giao cho Sản xuất & Kế toán        | **Thay đổi Trạng thái**: `🧊 Khách hàng` sang "CHUẨN BỊ HỢP ĐỒNG"                 | Tạo một `Thiết kế & Thi công/🧊 Khảo sát hiện trạng` cho Tony. <br /> Tạo một `Hợp đồng & Phiếu thu/🧊 Hợp đồng` cho đội tài chính.                               |
+    | **7**  | **CF-05** | `Đến` | Nhận thông báo Thanh toán              | **Thay đổi Trạng thái**: `Hợp đồng & Phiếu thu/🧊 Phiếu thu` sang "ĐÃ THANH TOÁN" | Gửi một tin nhắn tự động đến kênh chat của `Mảng việc Sales & CRM`. _Ví dụ: Thông báo cho David rằng khoản đặt cọc 11.500\$ của Sarah đã được thanh toán._        |
+    | **8**  | **CF-09** | `Đến` | Cập nhật Voucher khách hàng thân thiết | **Thay đổi Trạng thái**: `Quản lý dự án/🧊 Dự án` sang "HOÀN THÀNH"               | Tự động tính toán và cập nhật trường `Voucher` trong `🧊 Khách hàng` gốc. _Ví dụ: Thêm một voucher 500\$ vào hồ sơ của Sarah sau khi dự án của cô ấy hoàn thành._ |
+  </Tab>
+  <Tab title="Liên Hệ thống">
+    Các quy tắc này kết nối chức năng CRM với các nền tảng bên ngoài Luklak.
+
+    | Thứ tự | ID        | Tên quy tắc                 | Kích hoạt (Trigger)                     | Hành động (Action)                      | Mô tả                                                                                                                                                     |
+    | :----- | :-------- | :-------------------------- | :-------------------------------------- | :-------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **1**  | **CS-01** | Nhận Lead từ Trang đích     | **Webhook**: Form trên website được gửi | **Tạo mới**: `Sales & CRM/🧊Khách hàng` | Một lượt gửi form sẽ kích hoạt webhook tạo ra một `🧊 Khách hàng` mới. _Đây là cách yêu cầu của Sarah Westbrook trở thành một lead mới trong hệ thống._   |
+    | **5**  | **CS-02** | Tạo sự kiện Google Calendar | **Nhấn nút**: "Lên lịch hẹn"            | **HTTP Request**: Google Calendar       | Nhân viên kinh doanh nhấn một nút để tạo lời mời họp chung. _Ví dụ: Tạo sự kiện "LAIKA x Sarah & Michael" trên Google Calendar cho David, Max, và Sarah._ |
+  </Tab>
+</Tabs>
+
+```guidejar
+# Cách lên lịch Demo cho Khách hàng
+Hướng dẫn này chỉ bạn cách đặt một buổi tư vấn mới cho một lead khách hàng có sẵn, thao tác này cũng sẽ tự động tạo một sự kiện trên Google Calendar.
+
+## Phần 1: Tìm Khách hàng của bạn
+! Quan trọng: Đảm bảo Khách hàng đang ở trạng thái "LIÊN HỆ LẦN ĐẦU" hoặc các trạng thái sau đó trước khi lên lịch.
+
+1. Điều hướng đến giao diện làm việc chính "Kanban quy trình Khách hàng".
+![Ảnh chụp màn hình của bảng Kanban với các thẻ khách hàng](path/to/kanban.png)
+
+2. Nhấp vào 🧊 Khách hàng bạn muốn lên lịch demo.
+* Thao tác này sẽ mở ra giao diện chi tiết của Khách hàng.
+
+## Phần 2: Đặt lịch hẹn Tư vấn
+1. Trong giao diện chi tiết 🧊 Khách hàng, nhấp vào nút menu "..." ở góc trên cùng bên phải.
+![Ảnh chụp màn hình giao diện chi tiết Khách hàng với nút menu được tô sáng](path/to/customer-detail.png)
+
+2. Chọn "Đặt lịch Tư vấn" từ menu thả xuống.
+* Một form pop-up sẽ hiện ra để nhập chi tiết buổi demo.
+
+3. Điền vào các trường bắt buộc: Tiêu đề Demo, Thời gian, Địa điểm, và chọn một Nhà thiết kế tham dự.
+![Ảnh chụp màn hình của form pop-up đặt lịch demo](path/to/popup.png)
+
+4. Nhấp "Lên lịch".
+* Thao tác này sẽ tạo một 🧊︎ Demo (Object con) mới và gửi lời mời trên Google Calendar đến tất cả những người tham gia.
+```
+
+## **GIAO DIỆN LÀM VIỆC, BÁO CÁO & BỘ LỌC**
+
+<Tabs>
+  <Tab title="Giao diện làm việc">
+    | Giao diện làm việc                 | Mô tả                                                                                                 | Cấu hình dữ liệu                                                                                 |
+    | :--------------------------------- | :---------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
+    | 1. **Kanban quy trình Khách hàng** | Hiển thị khách hàng dưới dạng thẻ trong các cột đại diện cho mỗi giai đoạn từ `LEAD MỚI` đến `THẮNG`. | Tất cả `🧊 Khách hàng`, nhóm theo trạng thái, sắp xếp theo ngày nhận.                            |
+    | 2. **Lịch hẹn Demo**               | Chế độ xem lịch hàng tháng hiển thị tất cả các buổi hẹn tư vấn đã được lên lịch.                      | Tất cả `🧊︎ Demo` có thời gian đã lên lịch, được tích hợp với Google Calendar.                   |
+    | 3. **Danh sách Khách hàng**        | Chế độ xem bảng chi tiết của tất cả khách hàng với thông tin toàn diện.                               | Tất cả `🧊 Khách hàng`, với các bộ lọc cho nhân viên kinh doanh, nguồn quảng cáo, và trạng thái. |
+  </Tab>
+  <Tab title="Báo cáo">
+    | Tiện ích                             | Dữ liệu                                                                    | Mô tả                                                               |
+    | :----------------------------------- | :------------------------------------------------------------------------- | :------------------------------------------------------------------ |
+    | 1. **Biểu đồ phễu chuyển đổi**       | Tỷ lệ chuyển đổi từ Quảng cáo → Khách hàng → Hợp đồng.                     | Phân tích hiệu quả của toàn bộ quy trình từ Marketing đến Bán hàng. |
+    | 2. **Bộ đếm hiệu suất Nhân viên KD** | Số lượng Khách hàng được giao, Demo đã hoàn thành, và tỷ lệ chốt hợp đồng. | Đánh giá hiệu suất của từng nhân viên kinh doanh.                   |
+    | 3. **Thống kê 2D nguồn Quảng cáo**   | Phân bổ Khách hàng dựa trên mã theo dõi UTM từ các chiến dịch quảng cáo.   | Phân tích ROI của mỗi chiến dịch marketing.                         |
+  </Tab>
+  <Tab title="Bộ lọc">
+    | Bộ lọc                   | Tiêu chí                                                                                   | Lời nhắc                                                           |
+    | :----------------------- | :----------------------------------------------------------------------------------------- | :----------------------------------------------------------------- |
+    | 1. **Lead chưa liên hệ** | Trạng thái = "LEAD MỚI" VÀ Ngày nhận \> 24 giờ trước.                                      | Hàng ngày lúc 9:00 sáng cho Nhân viên KD được gán.                 |
+    | 2. **Demo sắp tới**      | Trạng thái = "ĐÃ LÊN LỊCH" VÀ Thời gian trong vòng 24 giờ tới.                             | Hàng ngày lúc 8:00 sáng cho Nhân viên KD và Nhà thiết kế được gán. |
+    | 3. **Lead tồn đọng**     | Trạng thái TRONG ("LIÊN HỆ LẦN ĐẦU", "THƯƠNG LƯỢNG") VÀ Cập nhật lần cuối \> 7 ngày trước. | Hàng tuần vào thứ Hai lúc 9:00 sáng cho Sales Manager.             |
+  </Tab>
+</Tabs>
+
+---
+
+## **VAI TRÒ, PHÂN QUYỀN & THÔNG BÁO**
+
+<Tabs>
+  <Tab title="Vai trò">
+    | Vai trò                     | Mô tả                                                                | Phân quyền & Thông báo                                                                                                                                                                                                                       |
+    | :-------------------------- | :------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **1. Nhân viên Kinh doanh** | Quản lý các `🧊 Khách hàng` và thực hiện các buổi tư vấn `🧊︎ Demo`. | **Phân quyền**: Toàn quyền kiểm soát các `🧊 Khách hàng` được gán và khả năng tạo/chỉnh sửa các `🧊︎ Demo` con của chúng. <br /> **Thông báo**: Nhận thông báo khi có `🧊 Khách hàng` mới được gán và lời nhắc 15 phút trước một `🧊︎ Demo`. |
+    | **2. Marketing Manager**    | Tạo các chiến dịch tạo lead cho CRM và theo dõi hiệu suất của chúng. | **Phân quyền**: Quyền chỉ đọc đối với `🧊 Khách hàng` để theo dõi nguồn lead và tỷ lệ chuyển đổi.<br />**Thông báo**: Không nhận thông báo theo thời gian thực cho mỗi lead, nhưng sử dụng dữ liệu cho các báo cáo hiệu suất chiến dịch.     |
+  </Tab>
+  <Tab title="Phân quyền">
+    #### Phương án Phân quyền chung
+
+    **Cách tiếp cận được sử dụng**: Lựa chọn 3 - Phân quyền Trung bình
+
+    - **`Xem ⏹️ Mảng việc`**: Tất cả thành viên có vai trò trong Mảng việc đều có thể xem.
+    - **`Xem & Cập nhật 🧊 Object`**: Chỉ những người dùng được gán trực tiếp vào một `🧊 Object` mới có thể xem và cập nhật nó.
+    - **Chat trên Object**: Bất kỳ ai có thể xem `🧊 Object` đều có thể tham gia vào cuộc trò chuyện của nó.
+  </Tab>
+  <Tab title="Thông báo">
+    #### Phương án Thông báo chung
+
+    **Cách tiếp cận được sử dụng**: Lựa chọn 2 - Chỉ thông báo cho những người liên quan
+
+    Tất cả các hành động được thực hiện trên một `🧊 Object` sẽ chỉ gửi thông báo đến những người dùng được gán trực tiếp vào `🧊 Object` cụ thể đó.
+  </Tab>
+</Tabs>
+
+**Xem gì tiếp theo?**
+
+- [**Chức năng Chiến dịch Marketing**](https://www.google.com/search?q=https://claude.ai/chat/path/to/marketing-function): Hiểu cách lead được tạo ra và theo dõi trước khi vào quy trình CRM này.
+- [**Chức năng Hợp đồng & Phiếu thu**](https://www.google.com/search?q=https://claude.ai/chat/path/to/contract-function): Xem bước tiếp theo trong hành trình sau khi khách hàng đồng ý một thương vụ.
+- [**Chức năng Khảo sát & Thi công**](https://www.google.com/search?q=https://claude.ai/chat/path/to/survey-function): Tìm hiểu cách các chi tiết dự án được ghi nhận và quản lý sau bán hàng.

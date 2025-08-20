@@ -51,7 +51,9 @@
           {
             "group": "Start Building",
             "pages": [
-              "vi/03-thiet-ke/laika-global2"
+              "vi/03-thiet-ke/laika-global2",
+              "vi/03-thiet-ke/laika-mkt",
+              "vi/03-thiet-ke/laika-crm"
 					]
 				}
             ]

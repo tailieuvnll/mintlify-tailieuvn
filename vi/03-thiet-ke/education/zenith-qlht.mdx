@@ -1,0 +1,267 @@
+---
+title: "Chức năng quản lí học thuật"
+---
+
+## Chức năng Quản lý Học thuật (Academic Management)
+
+<Info>
+  Mục đích: Tài liệu này định nghĩa logic vận hành nội bộ của 📋 Function Quản lý Học thuật. Nó chi tiết hóa quy trình từ việc thiết kế một chương trình học cho đến khi một lớp học cụ thể hoàn thành và lưu trữ.
+</Info>
+
+### Tại sao Chức năng này lại Quan trọng? (Why This Matters)
+
+<Check>
+  Chức năng này biến đổi việc quản lý học thuật từ một nỗ lực thủ công, rời rạc trên các file Excel thành một hệ thống sản xuất giáo dục tinh gọn và có thể mở rộng. Về mặt chiến lược, nó đảm bảo chất lượng giảng dạy đồng nhất trên toàn trung tâm và tối ưu hóa việc sử dụng nguồn lực quan trọng nhất: giáo viên. Đối với đội ngũ Quản lý Học thuật, nó cung cấp một bức tranh rõ ràng về hiệu suất lớp học và tiến độ của học viên. Đối với giáo viên, nó loại bỏ sự hỗn loạn bằng cách tập trung mọi thông tin (lịch dạy, danh sách lớp, giáo trình, điểm danh) vào một nơi duy nhất, giúp họ tập trung hoàn toàn vào việc giảng dạy.
+</Check>
+
+### Bức tranh Toàn cảnh (The Big Picture)
+
+<Info>
+  Về mặt kiến trúc, hệ thống này được thiết kế để làm trung tâm điều phối cho mọi hoạt động dạy và học. Nó nhận dữ liệu đầu vào từ 📋 Function Tài chính (thông qua 🧊 Enrollment Agreement) và Công tác Học viên (🧊 Student Record) để xếp lớp. Nó vận hành dựa trên ba 🧊 Objects cốt lõi: 🧊 Course (khung chương trình), 🧊 Class (lớp học thực tế), và 🧊 Teacher Profile (hồ sơ quản lý giáo viên). Đầu ra quan trọng của nó là dữ liệu về tiến độ học tập, được chuyển giao trở lại cho 📋 Function Công tác Học viên để chăm sóc và tư vấn lộ trình tiếp theo.
+</Info>
+
+Sơ lược Vị trí (Sneak peek)
+
+```
+🏢 ZENITH ENGLISH (Organization)
+│
+├── 📂 MARKETING (Area)
+│
+├── 📂 ADMISSIONS (Area)
+│
+├── 📂 FINANCE (Area)
+│
+├── 📂 ACADEMICS (Area) //Bạn đang ở đây
+│   └── ⏹️ Class Management (Space)
+│       └── 📋 Function: Academic Management
+│           ├── 🧊 Course
+│           ├── 🧊 Class
+│           └── 🧊 Teacher Profile
+│
+└── 📂 STUDENT AFFAIRS (Area)
+```
+
+## OBJECT RELATIONSHIPS (Mô hình Quan hệ Đối tượng)
+
+| Loại Quan hệ                              | Kết nối                           | Mô tả                                                                                                                                                                                                                  |
+| :---------------------------------------- | :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Quan hệ Cha-Con**                       | `🧊 Course` → `🧊︎ Class`         | Mỗi `Course` (khung chương trình) có thể có nhiều `Class` (lớp học thực tế) được mở. Đây là mối quan hệ phân rã cốt lõi, cho phép tái sử dụng một chương trình học cho nhiều lớp khác nhau.                            |
+| **Tham chiếu Đối tượng**                  | `🧊 Class` → `🧊 Teacher Profile` | Mỗi `Class` được gán cho một `Teacher Profile` cụ thể. Mối quan hệ này giúp quản lý việc phân công giảng dạy và tính toán khối lượng công việc cho giáo viên.                                                          |
+| **Tham chiếu Đối tượng (Liên chức năng)** | `🧊 Class` → `🧊 Student Record`  | Một `Class` sẽ liên kết với nhiều `Student Record` (từ P. Công tác Học viên) để tạo thành danh sách lớp. Đây là điểm kết nối quan trọng, đưa học viên vào môi trường học tập thực tế, khớp với luồng dữ liệu toàn cục. |
+
+---
+
+## OBJECT TYPES, WORKFLOWS & DATA FIELDS (Loại Đối tượng, Luồng Công việc & Trường Dữ liệu)
+
+### 1. 🧊 Course (Khóa học - Standard Object)
+
+- **Process Description**: Đây là đối tượng "cha" dùng để định nghĩa và chuẩn hóa tất cả các chương trình giảng dạy tại trung tâm. Nó hoạt động như một **bản thiết kế (blueprint)**, chứa đựng mọi thông tin về mục tiêu, giáo trình, thời lượng và học phí cho một khóa học. Một `Course` được tạo ra một lần và có thể được tái sử dụng để mở nhiều `Class` (lớp học) khác nhau.
+- **Example**: Khóa học "IELTS 7.0 Masterclass", mã khóa học `AC-001`, định nghĩa chương trình luyện thi IELTS đầu ra 7.0 với 36 buổi học và học phí chuẩn là 25,000,000 VND.
+
+<Tabs>
+  <Tab title="Workflow Diagram">
+    **Course Workflow**
+
+    ````
+    ```
+    DRAFT → ACTIVE → ARCHIVED
+    ```
+    *Luồng công việc của một Khóa học rất đơn giản, phản ánh vòng đời của một chương trình học.*
+    ````
+  </Tab>
+  <Tab title="Status Details">
+    | Status          | Business Logic                                                                                                                                        | Advanced Settings                                                                                                                              |
+    | :-------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **1. DRAFT**    | Quản lý Học thuật đang trong quá trình soạn thảo khung chương trình, mục tiêu học tập và định giá. Khóa học ở trạng thái này chưa thể dùng để mở lớp. | **Transition Permissions**: Academic Manager. <br /> **Data Input**: Tất cả các trường dữ liệu về học thuật và tài chính cần được điền đầy đủ. |
+    | **2. ACTIVE**   | Khóa học đã được phê duyệt và chính thức đưa vào áp dụng. Từ trạng thái này, nhân viên có thể tạo các `Class` (lớp học) con từ `Course` này.          | **Transition Permissions**: Academic Manager. <br /> **Key Action**: Mở khóa tính năng tạo `Class` Sub-Object.                                 |
+    | **3. ARCHIVED** | Khóa học không còn được áp dụng để mở lớp mới (ví dụ: giáo trình đã cũ). Nó được lưu trữ lại để phục vụ mục đích tra cứu lịch sử.                     | **Transition Permissions**: Academic Manager. <br /> **Đây là trạng thái kết thúc.**                                                           |
+  </Tab>
+  <Tab title="Data Fields">
+    **Data Field Groups**
+
+    | Group                                 | Field Name (Type)                                                                                                                                     | Notes                                             |
+    | :------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------ |
+    | **Thông tin Cơ bản** _(5 Fields)_     | Tên Khóa học (Text), Mã Khóa học (Text), Trình độ (Dropdown: Beginner, Intermediate...), Mô tả Ngắn (Paragraph), Hình ảnh Đại diện (Image)            | Các thông tin nhận diện chính của khóa học.       |
+    | **Chi tiết Học thuật** _(4 Fields)_   | Mục tiêu Đầu ra (Paragraph), Tổng số Buổi học (Number), Giáo trình & Tài liệu (File Upload), Phương pháp Đánh giá (Dropdown: Thi cuối kỳ, Project...) | Định nghĩa nội dung và cấu trúc giảng dạy.        |
+    | **Thông tin Thương mại** _(2 Fields)_ | Học phí Chuẩn (Currency), Chương trình Khuyến mãi Áp dụng (Text)                                                                                      | Các thông tin liên quan đến giá và bán hàng.      |
+    | **Quản lý** _(2 Fields)_              | Quản lý Phụ trách (User), Ngày tạo (DateTime)                                                                                                         | Theo dõi người chịu trách nhiệm và thời gian tạo. |
+    | **Total: 13 Fields**                  |                                                                                                                                                       |                                                   |
+  </Tab>
+</Tabs>
+
+---
+
+### 2. 🧊 Class (Lớp học - Sub-Object)
+
+- **Process Description**: Đây là đối tượng "con", là một **phiên bản thực thi** của một `Course`. Nếu `Course` là bản thiết kế xe, thì `Class` chính là chiếc xe lăn bánh ngoài thực tế. Đối tượng này quản lý mọi hoạt động hàng ngày: lịch học cụ thể, phân công giáo viên, danh sách học viên, điểm danh, và theo dõi trực tiếp. Đây là đối tượng làm việc chính của Quản lý Học thuật và Giáo viên.
+- **Example**: Lớp học `IELTS7.0-C01` là một phiên bản của khóa `AC-001 IELTS 7.0 Masterclass`, khai giảng ngày 01/09/2025, do giáo viên John Doe phụ trách, học vào tối Thứ 2-4-6 hàng tuần.
+
+<Tabs>
+  <Tab title="Workflow Diagram">
+    **Class Workflow**
+
+    ```
+                      ┌──────────> CANCELLED
+                      │
+    DRAFT → RECRUITING → IN PROGRESS → COMPLETED → ARCHIVED
+    ```
+
+    _Luồng công việc của một Lớp học phản ánh vòng đời từ lúc lên kế hoạch, tuyển sinh, vận hành cho đến khi kết thúc._
+  </Tab>
+  <Tab title="Status Details">
+    | Status             | Business Logic                                                                                                                                         | Advanced Settings & Cross-Function Links                                                                                                                                                                                                                                                                                                          |
+    | :----------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | **1. DRAFT**       | Quản lý Học thuật đang lên kế hoạch chi tiết cho lớp: sắp xếp lịch, chọn giáo viên dự kiến. Lớp ở trạng thái này chưa hiển thị cho các phòng ban khác. | **Transition Permissions**: Academic Manager. <br /> **Data Input**: Lịch học, giáo viên, sĩ số tối đa cần được điền.                                                                                                                                                                                                                             |
+    | **2. RECRUITING**  | Lớp học được mở để tuyển sinh. Lớp đã sẵn sàng để nhận học viên đăng ký.                                                                               | **Transition Permissions**: Academic Manager. <br /> **Cross-Function Link**: Lớp học ở trạng thái này sẽ xuất hiện trong danh sách lựa chọn của `Function: CRM` (P. Tuyển sinh) để họ ghi danh học viên vào.                                                                                                                                     |
+    | **3. IN PROGRESS** | Lớp học đã chính thức bắt đầu buổi học đầu tiên.                                                                                                       | **Transition Permissions**: Academic Manager. <br /> **Automation**: Có thể khóa danh sách học viên (chỉ cho phép thêm/bớt với quyền đặc biệt) để ổn định sĩ số. Gửi thông báo "Chào mừng đến với lớp học" cho toàn bộ học viên.                                                                                                                  |
+    | **4. COMPLETED**   | Lớp học đã kết thúc buổi học cuối cùng.                                                                                                                | **Transition Permissions**: Academic Manager, Teacher. <br /> **Cross-Function Automation (CF-05)**: Chuyển sang trạng thái này **tự động kích hoạt** việc tạo ra các `Progress Report` (Báo cáo Tiến độ) con trong `Function: Student Affairs` (P. Công tác Học viên) cho từng học viên trong lớp, và giao cho giáo viên phụ trách điền báo cáo. |
+    | **5. ARCHIVED**    | Mọi báo cáo đã hoàn tất, điểm số đã được nhập. Lớp được đóng và lưu trữ.                                                                               | **Transition Permissions**: Academic Manager. <br /> **Đây là trạng thái kết thúc thành công.**                                                                                                                                                                                                                                                   |
+    | **6. CANCELLED**   | Lớp học bị hủy (ví dụ: không đủ sĩ số).                                                                                                                | **Transition Permissions**: Academic Manager. <br /> **Automation**: Gửi thông báo đến các học viên đã đăng ký và cho `Function: Invoicing` (P. Tài chính) để xử lý hoàn phí.                                                                                                                                                                     |
+  </Tab>
+  <Tab title="Data Fields">
+    **Data Field Groups**
+
+    | Group                                | Field Name (Type)                                                                                                                       | Notes                                                                                                           |
+    | :----------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
+    | **Thông tin Cơ bản** _(6 Fields)_    | Tên Lớp học (Text - Tự động tạo), Mã Lớp học (Text), Ngày Khai giảng (Date), Ngày Kết thúc (Date), Lịch học (Text), Địa điểm (Dropdown) | Thông tin định danh và thời gian của lớp học.                                                                   |
+    | **Phân công Nguồn lực** _(3 Fields)_ | **Giáo viên Chính (Object Reference)**, Trợ giảng (User), **Danh sách Học viên (Multi-Object Reference)**                               | Các trường tham chiếu, kết nối `Class` với `Teacher Profile` và các `Student Record` liên quan.                 |
+    | **Vận hành** _(4 Fields)_            | Sĩ số Tối đa (Number), Sĩ số Hiện tại (Formula), **Bảng Điểm danh (Data Table)**, Ghi chú Vận hành (Paragraph)                          | Dữ liệu phục vụ quản lý và theo dõi hàng ngày. Bảng điểm danh là một Data Table như đã thiết kế ở cấp toàn cục. |
+    | **Tài chính** _(2 Fields)_           | Mức lương Giáo viên (Currency), Tổng Doanh thu (Formula)                                                                                | Các trường tính toán tự động để phục vụ báo cáo.                                                                |
+    | **Total: 15 Fields**                 |                                                                                                                                         |                                                                                                                 |
+  </Tab>
+</Tabs>
+
+---
+
+### 3. 🧊 Teacher Profile (Hồ sơ Giáo viên - Standard Object)
+
+- **Process Description**: Đây là đối tượng hoạt động như một **kho dữ liệu tập trung (master data)** cho toàn bộ đội ngũ giảng dạy. Nó không chỉ là một tài khoản người dùng, mà là một hồ sơ chuyên môn hoàn chỉnh, bao gồm thông tin cá nhân, kỹ năng, chứng chỉ, lịch làm việc, mức lương và cả hiệu suất giảng dạy. Việc này cho phép Quản lý Học thuật phân công giáo viên vào các lớp một cách tối ưu và khoa học nhất.
+- **Example**: Hồ sơ giáo viên John Doe, mã GV-007, chuyên môn IELTS/TOEFL, đang có 3 lớp được phân công, và có lịch trống vào các buổi chiều Thứ 3 và Thứ 5.
+
+<Tabs>
+  <Tab title="Workflow Diagram">
+    **Teacher Profile Workflow**
+
+    ```
+    POTENTIAL → ACTIVE ↔ ON LEAVE
+                  ↓
+                INACTIVE
+    ```
+
+    _Luồng công việc phản ánh trạng thái hợp tác của giáo viên với trung tâm._
+  </Tab>
+  <Tab title="Status Details">
+    | Status           | Business Logic                                                                                    | Advanced Settings                                                                                                                                                                                                |
+    | :--------------- | :------------------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **1. POTENTIAL** | Ứng viên đã qua phỏng vấn và đang trong giai đoạn chuẩn bị ký hợp đồng. Hồ sơ đang được khởi tạo. | **Transition Permissions**: Academic Manager, HR. <br /> **Data Input**: Các thông tin cơ bản, CV, chứng chỉ cần được tải lên.                                                                                   |
+    | **2. ACTIVE**    | Giáo viên đang trong biên chế hoạt động chính thức và sẵn sàng nhận lớp.                          | **Transition Permissions**: Academic Manager. <br /> **Key Action**: Giáo viên ở trạng thái này sẽ xuất hiện trong danh sách lựa chọn khi phân công cho một `Class`.                                             |
+    | **3. ON LEAVE**  | Giáo viên đang trong giai đoạn nghỉ phép (nghỉ hè, nghỉ ốm...).                                   | **Transition Permissions**: Academic Manager. <br /> **Rule**: Tạm thời ẩn giáo viên này khỏi danh sách phân công lớp mới.                                                                                       |
+    | **4. INACTIVE**  | Giáo viên đã ngừng hợp tác với trung tâm.                                                         | **Transition Permissions**: Academic Manager. <br /> **Rule**: Hồ sơ được lưu trữ, không thể phân công nhưng vẫn giữ lại để tra cứu lịch sử và tính toán lương thưởng cuối cùng. **Đây là trạng thái kết thúc.** |
+  </Tab>
+  <Tab title="Data Fields">
+    **Data Field Groups**
+
+    | Group                               | Field Name (Type)                                                                                                      | Notes                                                                                                          |
+    | :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------- |
+    | **Thông tin Cá nhân** _(4 Fields)_  | Họ và Tên (Text), Email (Email), Số điện thoại (Phone), **Tài khoản User Liên kết (User)**                             | Trường "Tài khoản User" dùng để kết nối hồ sơ này với tài khoản đăng nhập thực tế của giáo viên.               |
+    | **Hồ sơ Chuyên môn** _(4 Fields)_   | **Chuyên môn (Tags)**, Bằng cấp/Chứng chỉ (File Upload), Sơ yếu Lý lịch (File Upload), Giới thiệu bản thân (Paragraph) | Trường "Chuyên môn" dạng Tags (IELTS, TOEFL, Giao tiếp...) giúp lọc và tìm kiếm giáo viên phù hợp rất nhanh.   |
+    | **Thông tin Vận hành** _(4 Fields)_ | Loại Hợp đồng (Dropdown), Mức lương Chuẩn (Currency), Lịch rảnh (Text), **Số lớp Hiện tại (Formula)**                  | "Số lớp Hiện tại" là trường tự động đếm số `Class` đang ở trạng thái `IN PROGRESS` được gán cho giáo viên này. |
+    | **Đánh giá Hiệu suất** _(2 Fields)_ | Điểm Đánh giá TB từ HV (Formula), Tỷ lệ Hoàn thành Lớp (Formula)                                                       | Các chỉ số được tự động tính toán từ dữ liệu của các lớp học, cung cấp cái nhìn khách quan về hiệu suất.       |
+    | **Total: 14 Fields**                |                                                                                                                        |                                                                                                                |
+  </Tab>
+</Tabs>
+
+---
+
+## AUTOMATIONS (Tự động hóa)
+
+<Tabs>
+  <Tab title="Trong Chức năng (Within Function)">
+    Các quy tắc này chạy hoàn toàn bên trong `Space` Quản lý Học thuật để tăng hiệu quả cho Quản lý Học thuật và Giáo viên.
+
+    | ID        | Tên Rule                 | Trigger (Kích hoạt)                                                    | Action (Hành động)                         | Mô tả                                                                                                                                                                                          |
+    | :-------- | :----------------------- | :--------------------------------------------------------------------- | :----------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **AC-01** | Tính toán Chỉ số Lớp học | **Update**: Trường `Danh sách Học viên` trên `🧊 Class` được cập nhật. | **Update**: `🧊 Class`                     | Khi một học viên được thêm vào hoặc xóa khỏi lớp, hệ thống tự động tính toán lại các trường `Sĩ số Hiện tại` và `Tổng Doanh thu`, giúp Quản lý luôn có số liệu tức thời.                       |
+    | **AC-02** | Giao việc Chuẩn bị Lớp   | **Update**: Trường `Giáo viên Chính` trên `🧊 Class` được gán.         | **Create**: `☑️ Task`                      | Khi một giáo viên được phân công vào lớp, hệ thống tự động tạo các `Task` con cho họ, ví dụ: "Soạn email chào mừng học viên", "Kiểm tra lại giáo trình", đến hạn trước ngày khai giảng 3 ngày. |
+    | **AC-03** | Nhắc nhở Điểm danh       | **Scheduled**: Chạy vào 8:00 sáng hàng ngày.                           | **Send Chat**: Gửi tin nhắn cho giáo viên. | Hệ thống quét tất cả các `Class` đang "IN PROGRESS" có lịch học trong ngày, và gửi tin nhắn nhắc nhở đến giáo viên phụ trách để không quên vào điểm danh trên hệ thống.                        |
+  </Tab>
+  <Tab title="Liên Chức năng (Cross-Function)">
+    Các quy tắc này mô tả các điểm chuyển giao dữ liệu và công việc quan trọng giữa `Space` Quản lý Học thuật và các phòng ban khác, **khớp hoàn toàn với bản thiết kế toàn cục**.
+
+    | ID        | Hướng      | Tên Rule                    | Trigger (Kích hoạt)                                                                        | Action (Hành động) & Mô tả                                                                                                                                                                                                                 |
+    | :-------- | :--------- | :-------------------------- | :----------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **CF-04** | `Incoming` | Nhận yêu cầu Xếp lớp        | **Status Change**: `Finance/🧊 Invoice` sang "PAID".                                       | **Send Chat**: Gửi @mention đến vai trò `Academic Manager`, đính kèm `Student Record` của học viên vừa thanh toán xong. **Mô tả**: Đây là tín hiệu chính thức từ P. Tài chính, báo rằng học viên đã sẵn sàng để được xếp lớp.              |
+    | **CF-05** | `Outgoing` | Kích hoạt Báo cáo Tiến độ   | **Status Change**: `Academics/🧊 Class` sang "COMPLETED".                                  | **Create**: Tạo một `Student Affairs/🧊 Progress Report` cho mỗi học viên trong lớp. **Mô tả**: Đây là điểm chuyển giao công việc cốt lõi từ P. Học thuật sang P. Công tác Học viên, đảm bảo hành trình của học viên được ghi nhận đầy đủ. |
+    | **CF-06** | `Incoming` | Cập nhật Trạng thái Học tập | **Update**: Một `Student Record` được thêm vào trường `Danh sách Học viên` của `🧊 Class`. | **Update**: Cập nhật một trường trên `Student Affairs/🧊 Student Record` thành "Đã xếp lớp". **Mô tả**: Giúp hồ sơ tổng của học viên ở P. Công tác Học viên luôn được cập nhật tức thời về tình hình học tập.                              |
+  </Tab>
+  <Tab title="Liên Hệ thống (Cross-System)">
+    Các quy tắc này kết nối chức năng Quản lý Học thuật với các nền tảng bên ngoài Luklak.
+
+    | ID        | Tên Rule                              | Trigger (Kích hoạt)                                           | Action (Hành động) & Mô tả                                                                                                                                                                                                                  |
+    | :-------- | :------------------------------------ | :------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | **CS-06** | Đồng bộ Lịch dạy sang Google Calendar | **Update**: `🧊 Class` được gán giáo viên hoặc thay đổi lịch. | **HTTP Request**: Tạo/cập nhật một chuỗi sự kiện lặp lại trên **Google Calendar** của giáo viên được gán. **Mô tả**: Giúp lịch cá nhân của giáo viên luôn tự động đồng bộ với lịch dạy trên hệ thống, một tiện ích cực lớn.                 |
+    | **CS-07** | Gửi Tài liệu Khóa học                 | **Button Click**: Nút "Gửi Tài liệu" trên `🧊 Class`.         | **Send Email**: Gửi một **Email** hàng loạt đến tất cả học viên trong lớp, đính kèm các file từ trường `Giáo trình & Tài liệu` của `Course` cha. **Mô tả**: Tự động hóa việc phân phát tài liệu học tập cho học viên trước khi lớp bắt đầu. |
+  </Tab>
+</Tabs>
+
+---
+
+## WORKVIEWS, DASHBOARDS & FILTERS (Khung nhìn, Bảng điều khiển & Bộ lọc)
+
+<Tabs>
+  <Tab title="Workviews (Khung nhìn)">
+    | Workview                               | Mô tả                                                                                                                                                                            | Cấu hình Dữ liệu                                                                                                                        |
+    | :------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
+    | 1. **Lịch xếp lớp (Calendar View)**    | Một giao diện lịch trực quan hiển thị tất cả các `Class` theo ngày khai giảng và kết thúc. Giúp Quản lý Học thuật tránh xếp trùng lịch và có cái nhìn tổng quan hàng tuần/tháng. | Tất cả đối tượng `🧊 Class`, được mã màu theo `Trạng thái` (ví dụ: Đang tuyển sinh, Đang diễn ra).                                      |
+    | 2. **Danh sách Giáo viên (List View)** | Một bảng dữ liệu tổng hợp, hiển thị tất cả `Teacher Profile`. Đây là màn hình quản lý nguồn lực chính.                                                                           | Tất cả đối tượng `🧊 Teacher Profile`, với các cột chính như Chuyên môn, Số lớp hiện tại, Trạng thái. Có thể lọc nhanh theo chuyên môn. |
+    | 3. **Danh mục Khóa học (Card View)**   | Hiển thị các `Course` dưới dạng thẻ (card), giống như một "danh mục sản phẩm" của phòng Học thuật.                                                                               | Tất cả đối tượng `🧊 Course`, nhóm theo Trình độ (Beginner, Intermediate...).                                                           |
+  </Tab>
+  <Tab title="Dashboards (Bảng điều khiển)">
+    _`Dashboard này được thiết kế cho vai trò Academic Manager để theo dõi hiệu suất vận hành của phòng.`_
+
+    | Gadget                               | Dữ liệu                                                                                      | Mô tả                                                                                                                                              |
+    | :----------------------------------- | :------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | 1. **Tỷ lệ Lấp đầy Lớp (Gauge)**     | `TỔNG(Sĩ số Hiện tại) / TỔNG(Sĩ số Tối đa)` của các lớp đang `RECRUITING`.                   | Cung cấp một chỉ số nhanh, cho biết các lớp sắp khai giảng có đang được lấp đầy tốt hay không, phản ánh hiệu quả của đội ngũ Tuyển sinh.           |
+    | 2. **Phân bổ Giáo viên (Bar Chart)** | Đếm số lớp `IN PROGRESS` được gán cho mỗi giáo viên đang `ACTIVE`.                           | Giúp Quản lý Học thuật cân bằng khối lượng công việc, tránh tình trạng quá tải cho một số giáo viên và xác định ai là người sẵn sàng nhận lớp mới. |
+    | 3. **Lớp sắp Khai giảng (Counter)**  | Đếm số lượng `Class` đang ở trạng thái `RECRUITING` và có ngày khai giảng trong 30 ngày tới. | Một chỉ số đơn giản để nhìn về phía trước, đảm bảo luôn có đủ "sản phẩm" sẵn sàng để bán.                                                          |
+  </Tab>
+  <Tab title="Filters (Bộ lọc)">
+    | Filter                               | Tiêu chí                                                                                    | Lời nhắc (Reminder)                                                                                                         |
+    | :----------------------------------- | :------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------- |
+    | 1. **Lớp nguy cơ Hủy**               | `Trạng thái` = "RECRUITING" VÀ `Sĩ số Hiện tại` \< 5 VÀ `Ngày Khai giảng` trong 7 ngày tới. | **Hàng ngày lúc 10:00 SA** gửi đến `Academic Manager` và `Admissions Manager` để có hành động thúc đẩy tuyển sinh kịp thời. |
+    | 2. **Tìm Giáo viên IELTS còn trống** | `Trạng thái` = "ACTIVE" VÀ `Chuyên môn` chứa "IELTS" VÀ `Số lớp Hiện tại` \< 3.             | Không có. Đây là bộ lọc để Quản lý Học thuật sử dụng khi cần tìm nhanh giáo viên cho một lớp mới.                           |
+    | 3. **Lớp chờ Báo cáo Tiến độ**       | `Trạng thái` = "COMPLETED" VÀ có `Progress Report` liên quan chưa ở trạng thái "Đã nộp".    | **Hàng tuần vào 16:00 Thứ 6** gửi đến `Giáo viên Chính` được gán của lớp đó để nhắc nhở hoàn thành công việc hành chính.    |
+  </Tab>
+</Tabs>
+
+---
+
+## ROLES, PERMISSIONS & NOTIFICATIONS (Vai trò, Quyền hạn & Thông báo)
+
+<Tabs>
+  <Tab title="Roles (Vai trò)">
+    | Role                                                | Mô tả                                                                                                                          | Quyền hạn & Thông báo                                                                                                                                                                                                                                                                                                                  |
+    | :-------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **1. Quản lý Học thuật (Academic Manager)**         | Chịu trách nhiệm toàn bộ về việc tạo, quản lý và vận hành các `Course` và `Class`. Là người điều phối chính của chức năng này. | **Quyền hạn**: Toàn quyền (Tạo, Sửa, Xóa) trên cả ba đối tượng `Course`, `Class`, và `Teacher Profile`. <br /> **Thông báo**: Nhận thông báo khi có yêu cầu xếp lớp mới từ P. Tài chính, khi một lớp có nguy cơ bị hủy, và khi giáo viên hoàn thành việc nộp báo cáo tiến độ.                                                          |
+    | **2. Giáo viên (Teacher)**                          | Là người thực thi giảng dạy chính, chịu trách nhiệm cho các `Class` được phân công, bao gồm việc điểm danh và làm báo cáo.     | **Quyền hạn**: Chỉ có quyền `Sửa` trên các `Class` mà họ được gán làm "Giáo viên Chính". Không có quyền tạo `Class` mới hoặc sửa thông tin `Course`. Có quyền `Xem` các `Teacher Profile` khác. <br /> **Thông báo**: Nhận thông báo khi được gán vào một lớp mới, nhận nhắc nhở điểm danh hàng ngày, và nhắc nhở làm báo cáo tiến độ. |
+    | **3. Trưởng phòng Tuyển sinh (Admissions Manager)** | Theo dõi tình hình các lớp đang tuyển sinh để điều phối đội ngũ tư vấn.                                                        | **Quyền hạn**: Quyền `Xem` trên các đối tượng `Class` đang ở trạng thái "RECRUITING" để biết lớp nào còn chỗ và sắp khai giảng. <br /> **Thông báo**: Nhận thông báo khi một lớp có nguy cơ bị hủy do không đủ sĩ số.                                                                                                                  |
+  </Tab>
+  <Tab title="Permissions (Quyền hạn)">
+    #### Lược đồ Quyền hạn Chung
+
+    **Phương pháp sử dụng**: Lựa chọn 3 - Quyền hạn Hạn chế Vừa phải (Moderate Permissions)
+
+    - **`Xem ⏹️ Space`**: Tất cả các vai trò được định nghĩa ở trên có thể xem Space Quản lý Học thuật.
+    - **`Xem & Sửa 🧊 Object`**:
+      - **`Đối với Class`**: Chỉ `Quản lý Học thuật` và `Giáo viên` được gán trực tiếp mới có thể xem và sửa.
+      - **``Đối với Course và Teacher Profile``**: Chỉ `Quản lý Học thuật` mới có quyền tạo/sửa. Các vai trò khác chỉ có quyền xem.
+    - **Trò chuyện trong Đối tượng**: Bất kỳ ai có thể xem `🧊 Object` đều có thể tham gia trò chuyện.
+  </Tab>
+  <Tab title="Notifications (Thông báo)">
+    #### Lược đồ Thông báo Chung
+
+    **Phương pháp sử dụng**: Lựa chọn 2 - Chỉ thông báo cho Người liên quan (Notify Relevant People Only)
+
+    Tất cả các hành động được thực hiện trên một `🧊 Object` sẽ chỉ gửi thông báo đến những người dùng được gán trực tiếp vào `🧊 Object` đó (ví dụ: Quản lý phụ trách, Giáo viên được gán). Điều này tuân thủ nguyên tắc "giảm nhiễu thông báo" đã đề ra ở cấp toàn cục.
+  </Tab>
+</Tabs>

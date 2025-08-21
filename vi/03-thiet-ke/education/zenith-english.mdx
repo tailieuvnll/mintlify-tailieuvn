@@ -1,0 +1,329 @@
+---
+title: "ZENITH ENGLISH - BẢN THIẾT KẾ CẤU HÌNH TOÀN CỤC (Vietnamese Version)"
+---
+
+---
+
+### **PHẦN 1: CẤU TRÚC TỔ CHỨC & KHÔNG GIAN LÀM VIỆC**
+
+#### **1.1. Cấu trúc Tổ chức Hợp nhất**
+
+Sơ đồ này minh họa hệ thống phân cấp rõ ràng của các đơn vị chức năng và loại đối tượng nghiệp vụ trong hệ thống. Định dạng này đặt Function (bản thiết kế) ngay bên dưới Space (phiên bản thực thi) để làm rõ mối quan hệ của chúng.
+
+```
+🏢 ZENITH ENGLISH (Tổ chức)
+│
+├── 📂 MARKETING (Phòng ban)
+│   └── ⏹️ Marketing Campaigns (Space)
+│       └── 📋 Function: Marketing Campaigns
+│           └── 🧊 Campaign
+│               └── 🧊︎ Ad (Sub-Object)
+│
+├── 📂 TUYỂN SINH (Phòng ban)
+│   └── ⏹️ Admissions & CRM (Space)
+│       └── 📋 Function: CRM
+│           └── 🧊 Lead (Khách hàng tiềm năng)
+│               └── 🧊︎ Placement Test (Bài kiểm tra đầu vào)
+│
+├── 📂 TÀI CHÍNH (Phòng ban)
+│   └── ⏹️ Tuition & Invoicing (Space)
+│       └── 📋 Function: Invoicing
+│           └── 🧊 Enrollment Agreement (Thỏa thuận nhập học)
+│               └── 🧊︎ Invoice (Hóa đơn)
+│
+├── 📂 HỌC THUẬT (Phòng ban)
+│   └── ⏹️ Class Management (Space)
+│       └── 📋 Function: Academic Management
+│           └── 🧊 Course (Khóa học)
+│               └── 🧊︎ Class (Lớp học)
+│
+└── 📂 CÔNG TÁC HỌC VIÊN (Phòng ban)
+    └── ⏹️ Student Support (Space)
+        └── 📋 Function: Student Affairs
+            └── 🧊 Student Record (Hồ sơ học viên)
+                └── 🧊︎ Progress Report (Báo cáo tiến độ)
+```
+
+#### **1.2. Danh sách Phòng làm việc (Workspace)**
+
+Các không gian làm việc ảo được thiết kế để phục vụ các nhóm người dùng hoặc mục tiêu cụ thể, giúp tập trung vào công việc liên quan bằng cách tổng hợp các mục cần thiết.
+
+| Tên Workspace           | Mục đích Thiết kế                                                                                                                   | Các tiện ích Bao gồm (Dashboards, Filters, Spaces)                                                                                                        |
+| :---------------------- | :---------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Workspace Điều hành** | Tổng hợp các chỉ số quan trọng về tuyển sinh, doanh thu và hiệu quả học tập cho ban lãnh đạo.                                       | - **Dashboard**: Tổng quan Hiệu suất Trung tâm\<br\>- **Filter**: Các khóa học giá trị cao\<br\>- **Space (Chỉ đọc)**: Admissions & CRM, Class Management |
+| **Hub Tuyển sinh**      | Một môi trường chung cho các đội Marketing và Tuyển sinh để theo dõi toàn bộ phễu từ lead đến nhập học.                             | - **Space**: Marketing Campaigns, Admissions & CRM, Tuition & Invoicing\<br\>- **Filter**: Lead chờ kiểm tra đầu vào                                      |
+| **Vận hành Học thuật**  | Một trung tâm điều phối cho Quản lý Học thuật, Giáo viên và nhân viên Công tác Học viên để quản lý lớp học và tiến độ của học viên. | - **Space**: Class Management, Student Support                                                                                                            |
+
+---
+
+### **PHẦN 2: QUẢN LÝ NGƯỜI DÙNG**
+
+#### **2.1. Quản lý Tài khoản**
+
+Hệ thống sử dụng hai loại tài khoản để phân biệt rõ ràng giữa hành động của người dùng và các quy trình tự động của hệ thống.
+
+| Loại Tài khoản           | Mô tả                                                                                                                             | Ứng dụng tại Zenith English                                                                                       |
+| :----------------------- | :-------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
+| **Tài khoản Người dùng** | Tài khoản tiêu chuẩn cho các thành viên, được liên kết với một người cụ thể đăng nhập vào nền tảng để làm việc và cộng tác.       | Dành cho tất cả nhân viên Zenith English.                                                                         |
+| **Tài khoản Chức năng**  | Một tài khoản đặc biệt, không dùng để đăng nhập, được sử dụng riêng cho Universal Automation để đảm bảo lịch sử thay đổi rõ ràng. | Một tài khoản duy nhất, `automation@zenith.com`, sẽ được tạo để thực thi tất cả các quy tắc tự động hóa toàn cục. |
+
+#### **2.2. Nhóm Toàn cục**
+
+Một nhóm là một tập hợp các tài khoản người dùng, được sử dụng để phân quyền truy cập và thông báo một cách hiệu quả trên quy mô lớn.
+
+| Tên Nhóm                    | Mô tả & Thành viên Ví dụ                                                                       |
+| :-------------------------- | :--------------------------------------------------------------------------------------------- |
+| `Phòng Marketing`           | Bao gồm tất cả thành viên của phòng Marketing.                                                 |
+| `Đội ngũ Tuyển sinh`        | Bao gồm tất cả tư vấn viên tuyển sinh và quản lý của họ.                                       |
+| `Phòng Tài chính`           | Bao gồm tất cả nhân viên kế toán và tài chính.                                                 |
+| `Hội đồng Học thuật`        | Bao gồm các Quản lý Học thuật và giáo viên cấp cao chịu trách nhiệm về chương trình giảng dạy. |
+| `Đội ngũ Giáo viên`         | Bao gồm tất cả giáo viên toàn thời gian và bán thời gian.                                      |
+| `Đội ngũ Công tác Học viên` | Bao gồm tất cả các chuyên viên hỗ trợ học viên.                                                |
+| `Ban Giám đốc`              | Bao gồm CEO, Giám đốc Trung tâm và ban lãnh đạo cấp cao.                                       |
+
+#### **2.3. Vai trò Toàn cục**
+
+Vai trò là một chức danh trừu tượng (ví dụ: "Giáo viên") không gắn liền với một người dùng hay nhóm cụ thể. Quyền hạn được gán cho Vai trò, sau đó người dùng/nhóm thực tế sẽ được ánh xạ vào Vai trò đó trong mỗi Space cụ thể.
+
+| Tên Vai trò               | Trách nhiệm Cốt lõi                                                                  |
+| :------------------------ | :----------------------------------------------------------------------------------- |
+| `Trưởng phòng Marketing`  | Quản lý các chiến dịch, ngân sách quảng cáo và hiệu suất tạo ra lead.                |
+| `Tư vấn viên Tuyển sinh`  | Tư vấn cho khách hàng tiềm năng, tổ chức kiểm tra đầu vào và xử lý thủ tục nhập học. |
+| `Quản lý Học thuật`       | Quản lý các khóa học, sắp xếp lịch học và giám sát chất lượng giảng dạy.             |
+| `Giáo viên`               | Giảng dạy, đánh giá kết quả học tập của học viên và đưa ra phản hồi.                 |
+| `Kế toán`                 | Quản lý việc thanh toán học phí, xuất hóa đơn và các vấn đề tài chính khác.          |
+| `Chuyên viên Công tác HV` | Quản lý chăm sóc học viên, theo dõi tiến độ và xử lý các yêu cầu hỗ trợ.             |
+
+---
+
+### **PHẦN 2: QUẢN LÝ NGƯỜI DÙNG (Vietnamese Version)**
+
+#### **2.1. Quản lý Tài khoản**
+
+Hệ thống sử dụng hai loại tài khoản để phân biệt rõ ràng giữa hành động của người dùng và các quy trình tự động của hệ thống.
+
+| Loại Tài khoản           | Mô tả                                                                                                                             | Ứng dụng tại Zenith English                                                                                       |
+| :----------------------- | :-------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
+| **Tài khoản Người dùng** | Tài khoản tiêu chuẩn cho các thành viên, được liên kết với một người cụ thể đăng nhập vào nền tảng để làm việc và cộng tác.       | Dành cho tất cả nhân viên Zenith English.                                                                         |
+| **Tài khoản Chức năng**  | Một tài khoản đặc biệt, không dùng để đăng nhập, được sử dụng riêng cho Universal Automation để đảm bảo lịch sử thay đổi rõ ràng. | Một tài khoản duy nhất, `automation@zenith.com`, sẽ được tạo để thực thi tất cả các quy tắc tự động hóa toàn cục. |
+
+#### **2.2. Nhóm Toàn cục**
+
+Một nhóm là một tập hợp các tài khoản người dùng, được sử dụng để phân quyền truy cập và thông báo một cách hiệu quả trên quy mô lớn.
+
+| Tên Nhóm                    | Mô tả & Thành viên Ví dụ                                                                       |
+| :-------------------------- | :--------------------------------------------------------------------------------------------- |
+| `Phòng Marketing`           | Bao gồm tất cả thành viên của phòng Marketing.                                                 |
+| `Đội ngũ Tuyển sinh`        | Bao gồm tất cả tư vấn viên tuyển sinh và quản lý của họ.                                       |
+| `Phòng Tài chính`           | Bao gồm tất cả nhân viên kế toán và tài chính.                                                 |
+| `Hội đồng Học thuật`        | Bao gồm các Quản lý Học thuật và giáo viên cấp cao chịu trách nhiệm về chương trình giảng dạy. |
+| `Đội ngũ Giáo viên`         | Bao gồm tất cả giáo viên toàn thời gian và bán thời gian.                                      |
+| `Đội ngũ Công tác Học viên` | Bao gồm tất cả các chuyên viên hỗ trợ học viên.                                                |
+| `Ban Giám đốc`              | Bao gồm CEO, Giám đốc Trung tâm và ban lãnh đạo cấp cao.                                       |
+
+#### **2.3. Vai trò Toàn cục**
+
+Vai trò là một chức danh trừu tượng (ví dụ: "Giáo viên") không gắn liền với một người dùng hay nhóm cụ thể. Quyền hạn được gán cho Vai trò, sau đó người dùng/nhóm thực tế sẽ được ánh xạ vào Vai trò đó trong mỗi Space cụ thể.
+
+| Tên Vai trò               | Trách nhiệm Cốt lõi                                                                  |
+| :------------------------ | :----------------------------------------------------------------------------------- |
+| `Trưởng phòng Marketing`  | Quản lý các chiến dịch, ngân sách quảng cáo và hiệu suất tạo ra lead.                |
+| `Tư vấn viên Tuyển sinh`  | Tư vấn cho khách hàng tiềm năng, tổ chức kiểm tra đầu vào và xử lý thủ tục nhập học. |
+| `Quản lý Học thuật`       | Quản lý các khóa học, sắp xếp lịch học và giám sát chất lượng giảng dạy.             |
+| `Giáo viên`               | Giảng dạy, đánh giá kết quả học tập của học viên và đưa ra phản hồi.                 |
+| `Kế toán`                 | Quản lý việc thanh toán học phí, xuất hóa đơn và các vấn đề tài chính khác.          |
+| `Chuyên viên Công tác HV` | Quản lý chăm sóc học viên, theo dõi tiến độ và xử lý các yêu cầu hỗ trợ.             |
+
+---
+
+Understood. I will now generate **PART 3: OBJECT RELATIONSHIP MODEL** in both English and Vietnamese.
+
+---
+
+### **PHẦN 3: MÔ HÌNH QUAN HỆ ĐỐI TƯỢỢNG (Vietnamese Version)**
+
+#### **3.1. Quan hệ Cha-Con (Parent-Child Relationships)**
+
+- **Mô tả:** Một cấu trúc phân cấp chặt chẽ, có sẵn giữa một `Object` chuẩn và các `Sub-Object` của nó. Phương pháp này phù hợp nhất cho các cấu trúc phân rã công việc.
+- **Ứng dụng tại Zenith English:**
+
+| Đối tượng Cha                      | Đối tượng Con                       | Lý do Kiến trúc                                                                                                                              |
+| :--------------------------------- | :---------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Marketing/🧊Campaign`             | `Marketing/🧊Ad`                    | **Cấu trúc Phân rã Công việc:** Mỗi `Campaign` là một kế hoạch lớn được thực thi thông qua nhiều `Ad` cụ thể.                                |
+| `Admissions/🧊Lead`                | `Admissions/🧊Placement Test`       | **Cấu trúc Phân rã Quy trình:** Một `Lead` phải hoàn thành `Placement Test` để xác định trình độ trước khi nhập học.                         |
+| `Finance/🧊Enrollment Agreement`   | `Finance/🧊Invoice`                 | **Cấu trúc Phân rã Tài chính:** Tổng học phí của một `Enrollment Agreement` được chia thành nhiều `Invoice` để thanh toán theo đợt.          |
+| `Academics/🧊Course`               | `Academics/🧊Class`                 | **Cấu trúc Phân rã Học thuật:** Một `Course` (ví dụ: IELTS 7.0) là giáo trình khung, được giảng dạy qua nhiều `Class` (ví dụ: Lớp I7A, I7B). |
+| `Student Affairs/🧊Student Record` | `Student Affairs/🧊Progress Report` | **Cấu trúc Theo dõi Hiệu suất:** Một `Student Record` chứa một chuỗi các `Progress Report` theo thứ tự thời gian để ghi lại kết quả học tập. |
+
+#### **3.2. Kết nối Toàn cục (Global Connections)**
+
+- **Mô tả:** Một thư viện quản lý tập trung các _loại_ quan hệ có thể tái sử dụng, giúp chuẩn hóa _ý nghĩa_ của các mối quan hệ hai chiều trên toàn hệ thống.
+- **Ứng dụng tại Zenith English:** Định nghĩa hành trình cốt lõi của học viên giữa các phòng ban.
+
+| Loại Kết nối                | Đối tượng A                      | Quan hệ A → B | Đối tượng B                        | Quan hệ B → A |
+| :-------------------------- | :------------------------------- | :------------ | :--------------------------------- | :------------ |
+| **Marketing → Tuyển sinh**  | `Marketing/🧊Ad`                 | Tạo ra        | `Admissions/🧊Lead`                | Nguồn từ      |
+| **Tuyển sinh ↔ Tài chính**  | `Admissions/🧊Lead`              | Ký kết        | `Finance/🧊Enrollment Agreement`   | Dành cho      |
+| **Tài chính → Công tác HV** | `Finance/🧊Enrollment Agreement` | Khởi tạo      | `Student Affairs/🧊Student Record` | Tạo từ        |
+| **Học thuật ↔ Công tác HV** | `Academics/🧊Class`              | Có học viên   | `Student Affairs/🧊Student Record` | Đăng ký       |
+
+#### **3.3. Trường chọn Đối tượng (Object Picker Fields)**
+
+- **Mô tả:** Một trường dữ liệu linh hoạt cho phép một `Object` tham chiếu đến một hoặc nhiều `Object` khác. Đây là công cụ để _thực thi_ các mối quan hệ đã định nghĩa ở trên.
+- **Ứng dụng tại Zenith English:**
+
+| Định nghĩa trên Đối tượng          | Tên Trường           | Loại Tham chiếu                         | Mục đích                                                                       |
+| :--------------------------------- | :------------------- | :-------------------------------------- | :----------------------------------------------------------------------------- |
+| `Admissions/🧊Lead`                | `Ad Source`          | Chọn 1 `Marketing/🧊Ad`                 | Để theo dõi kênh marketing đã tạo ra lead, phục vụ phân tích ROI.              |
+| `Finance/🧊Enrollment Agreement`   | `Student`            | Chọn 1 `Admissions/🧊Lead`              | Để xác định thỏa thuận này dành cho lead nào.                                  |
+| `Student Affairs/🧊Student Record` | `Original Agreement` | Chọn 1 `Finance/🧊Enrollment Agreement` | Để liên kết hồ sơ chính thức của học viên trở lại thỏa thuận tài chính của họ. |
+| `Student Affairs/🧊Student Record` | `Enrolled Classes`   | Chọn nhiều `Academics/🧊Class`          | Để theo dõi tất cả các lớp mà một học viên đang hoặc đã theo học.              |
+
+#### **3.4. Trường Bảng dữ liệu (Data Table Fields)**
+
+- **Mô tả:** Một 'bảng tính' được nhúng trong một `Object` để quản lý các danh sách dữ liệu có cấu trúc, lý tưởng để mô hình hóa dữ liệu 'một-nhiều' bên trong.
+- **Ứng dụng tại Zenith English:**
+
+| Sử dụng trên Đối tượng           | Tên Bảng dữ liệu                     | Các cột Ví dụ                                                  | Lý do & Lợi ích                                                                                                                                                     |
+| :------------------------------- | :----------------------------------- | :------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Finance/🧊Enrollment Agreement` | `Payment Schedule` (Lịch thanh toán) | `Đợt`, `Số tiền`, `Hạn nộp`, `Trạng thái`, `Hóa đơn liên quan` | Cung cấp cái nhìn tổng quan, có cấu trúc về toàn bộ kế hoạch thanh toán ngay trên thỏa thuận. Đơn giản hóa việc theo dõi học phí đã nộp và còn nợ.                  |
+| `Academics/🧊Class`              | `Attendance Sheet` (Bảng điểm danh)  | `Ngày`, `Tên học viên`, `Trạng thái (Có mặt/Vắng)`, `Ghi chú`  | Cho phép giáo viên quản lý việc điểm danh hàng ngày ngay trong đối tượng lớp học, cung cấp một bản ghi tập trung và dễ dàng kiểm tra về sự chuyên cần của học viên. |
+
+---
+
+### **PHẦN 4: MÀN HÌNH LÀM VIỆC, BÁO CÁO, BỘ LỌC & LỜI NHẮC (Vietnamese Version)**
+
+Phần này định nghĩa các công cụ để tổng hợp và trình bày dữ liệu từ tất cả các chức năng, giúp người dùng làm việc hiệu quả và cho phép ban lãnh đạo đưa ra quyết định sáng suốt dựa trên cái nhìn toàn diện về hoạt động kinh doanh.
+
+#### **4.1. Màn hình làm việc Toàn cục (Global Workviews)**
+
+Đây là các màn hình làm việc được lưu sẵn ở cấp độ toàn cục, hợp nhất các hạng mục công việc từ nhiều Space khác nhau cho mục đích quản lý vận hành.
+
+| Tên Khung nhìn                    | Loại Khung nhìn | Nguồn Dữ liệu & Logic Lọc                                                                 | Đối tượng                             |
+| :-------------------------------- | :-------------- | :---------------------------------------------------------------------------------------- | :------------------------------------ |
+| **Tất cả Lớp học Đang hoạt động** | List View       | **Nguồn:** `Academics/🧊Class`\<br\>**Logic:** `Trạng thái` KHÁC "Hoàn thành" VÀ "Đã hủy" | Quản lý Học thuật, Giám đốc Trung tâm |
+
+#### **4.2. Báo cáo Toàn cục (Global Dashboards)**
+
+Báo cáo này được đặt trong "Workspace Điều hành" để cung cấp cái nhìn 360 độ về hiệu suất kinh doanh.
+
+| Tên Bảng điều khiển               | Mục đích & Đối tượng                                                                                                                  |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+| **Tổng quan Hiệu suất Trung tâm** | Cung cấp cái nhìn tổng quan toàn diện về phễu tuyển sinh, doanh thu, và tỷ lệ lấp đầy lớp học cho Ban Giám đốc và Giám đốc Trung tâm. |
+
+- **Cấu trúc chi tiết của Bảng điều khiển "Tổng quan Hiệu suất Trung tâm":**
+
+| # | Tên Gadget                               | Loại Biểu đồ          | Nguồn Dữ liệu (Functions & Objects)                               | Logic & Chỉ số chính                                                                                                                                          |
+| :-- | :--------------------------------------- | :-------------------- | :---------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1 | **Phễu Tuyển sinh**                      | Funnel Chart          | `Admissions/🧊Lead`                                               | Đếm số lượng `Lead` theo `Trạng thái` (ví dụ: Mới, Đã liên hệ, Đã kiểm tra, Đã nhập học) để theo dõi tỷ lệ chuyển đổi.                                        |
+| 2 | **Doanh thu Tháng & Công nợ**            | Counter & Calculation | `Finance/🧊Invoice`                                               | - **Doanh thu**: `TỔNG(Số tiền)` VỚI `Trạng thái` = "Đã thanh toán" trong tháng này.\<br\>- **Công nợ**: `TỔNG(Số tiền)` VỚI `Trạng thái` = "Chờ thanh toán". |
+| 3 | **Nguồn Lead hàng đầu theo SL nhập học** | Pie Chart             | `Finance/🧊Enrollment Agreement` liên kết tới `Admissions/🧊Lead` | `ĐẾM(Enrollment Agreements)` nhóm theo trường `Nguồn Ad` trên đối tượng `Lead`.                                                                               |
+| 4 | **Tổng quan Trạng thái Lớp học**         | Bar Chart             | `Academics/🧊Class`                                               | Đếm số lượng `Lớp học` theo `Trạng thái` (ví dụ: Đang tuyển sinh, Đang diễn ra, Đã hoàn thành).                                                               |
+
+#### **4.3. Bộ lọc đã lưu Toàn cục (Global Saved Filters)**
+
+Các bộ lọc đã lưu cho phép người dùng truy cập nhanh vào các danh sách công việc quan trọng.
+
+| Tên Bộ lọc                    | Nguồn Dữ liệu & Logic Lọc                                                    | Mục đích & Đối tượng                                                                                      |
+| :---------------------------- | :--------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| **Lead chờ kiểm tra đầu vào** | **Nguồn:** `Admissions/🧊Lead`\<br\>**Logic:** `Trạng thái` = "Chờ kiểm tra" | Giúp Tư vấn viên Tuyển sinh tập trung và lên lịch kiểm tra cho các học viên tiềm năng.                    |
+| **Các khóa học giá trị cao**  | **Nguồn:** `Academics/🧊Course`\<br\>**Logic:** `Học phí` \> 20,000,000 VND  | Cho phép bộ phận Marketing và Ban quản lý ưu tiên và theo dõi các chương trình giáo dục có doanh thu cao. |
+
+#### **4.4. Nhắc việc Bộ lọc (Filter Reminders)**
+
+Thông báo tự động dựa trên các bộ lọc đã lưu để đảm bảo các công việc quan trọng không bị bỏ lỡ.
+
+| Tên Lời nhắc                           | Nguồn Dữ liệu & Bộ lọc sử dụng                                                                                                            | Tần suất & Thời gian  | Người nhận (Vai trò/Nhóm)                   |
+| :------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- | :-------------------- | :------------------------------------------ |
+| **Nhắc hạn thanh toán hóa đơn**        | **Nguồn:** `Finance/🧊Invoice`\<br\>**Logic:** `Ngày đến hạn` trong vòng 7 ngày tới VÀ `Trạng thái` KHÁC "Đã thanh toán".                 | Hàng ngày lúc 9:00 SA | - `Kế toán`\<br\>- `Tư vấn viên Tuyển sinh` |
+| **Nhắc theo dõi Lead không hoạt động** | **Nguồn:** `Admissions/🧊Lead`\<br\>**Logic:** `Ngày cập nhật cuối` hơn 14 ngày trước VÀ `Trạng thái` KHÁC "Đã nhập học" HOẶC "Thất bại". | Hàng ngày lúc 8:30 SA | - `Tư vấn viên Tuyển sinh`                  |
+
+
+Excellent. Here is **PART 5: GLOBAL LOGIC & AUTOMATION** in both English and Vietnamese.
+
+---
+
+
+### **PHẦN 5: LOGIC & TỰ ĐỘNG HÓA TOÀN CỤC (Vietnamese Version)**
+
+#### **5.1. Tự động hóa Liên-hệ-thống (Cross-system Automation)**
+
+* **Mô tả:** Các quy tắc kết nối Luklak với các ứng dụng và dịch vụ bên ngoài (ví dụ: Website, Lịch Google, Cổng thanh toán, Email).
+
+| Mã Rule | Tên Rule | Mô tả Nghiệp vụ |
+| :--- | :--- | :--- |
+| **CS-01** | Nhận Lead từ Website | Khi một biểu mẫu được gửi trên website, một **Webhook** sẽ kích hoạt việc tạo một `Admissions/🧊Lead` và liên kết nó với `Marketing/🧊Ad` nguồn. |
+| **CS-02** | Lên lịch Test trên Lịch Google | Một Tư vấn viên Tuyển sinh nhấp vào một nút trên `Lead`, gửi một **HTTP Request** để tạo một sự kiện trong **Lịch Google** cho bài kiểm tra đầu vào. |
+| **CS-03** | Tạo Thỏa thuận từ Mẫu | Một Kế toán viên nhấp vào một nút trên `Enrollment Agreement`, gửi một **HTTP Request** để điền dữ liệu học viên và khóa học vào một mẫu **Google Docs**. |
+| **CS-04** | Ghi nhận Thanh toán từ Cổng TT | Một **Cổng thanh toán** bên ngoài gửi một **Webhook** khi thanh toán thành công, hệ thống sẽ tìm `Finance/🧊Invoice` tương ứng và cập nhật trạng thái thành "Đã thanh toán". |
+| **CS-05** | Gửi Email Chào mừng | Khi trạng thái `Enrollment Agreement` thay đổi thành "Đã ký", một **Email** tự động được gửi đến học viên với gói chào mừng và hướng dẫn ban đầu. |
+
+#### **5.2. Tự động hóa Liên-chức-năng (Cross-function Automation)**
+
+* **Mô tả:** Các quy tắc điều phối và chuyển giao công việc giữa các phòng ban khác nhau *bên trong* nền tảng Luklak.
+
+| Mã Rule | Tên Rule | Mô tả Nghiệp vụ |
+| :--- | :--- | :--- |
+| **CF-01**| Lead Đạt Test -> Tạo Thỏa thuận | Thay đổi trạng thái trên `Admissions/🧊Lead` thành "Đạt Test" sẽ tự động tạo một `Finance/🧊Enrollment Agreement` mới và liên kết nó với lead. |
+| **CF-02**| Thỏa thuận Đã ký -> Tạo Hồ sơ HV | Thay đổi trạng thái trên `Finance/🧊Enrollment Agreement` thành "Đã ký" sẽ tự động tạo một `Student Affairs/🧊Student Record` mới, chính thức chuyển đổi lead thành học viên. |
+| **CF-03**| Nhận được Thanh toán Lần đầu -> Báo cho P.Học thuật | Thay đổi trạng thái trên `Finance/🧊Invoice` đầu tiên thành "Đã thanh toán" sẽ tự động gửi một Chat @mention đến vai trò `Quản lý Học thuật` để sắp xếp lớp học. |
+| **CF-04**| Thêm HV vào Lớp -> Cập nhật Hồ sơ | Khi một `Student Record` được liên kết với một `Academics/🧊Class`, một quy tắc sẽ tự động cập nhật trường `Các lớp đã đăng ký` trên đối tượng `Student Record`. |
+| **CF-05**| Lớp học Hoàn thành -> Tạo Báo cáo Tiến độ | Thay đổi trạng thái trên `Academics/🧊Class` thành "Hoàn thành" sẽ tự động tạo một `Student Affairs/🧊Progress Report` mới cho mỗi học viên, được giao cho Giáo viên. |
+
+---
+
+### **PHẦN 6: MÔ HÌNH PHÂN QUYỀN (Vietnamese Version)**
+
+#### **6.1. Lớp 1: Đặc quyền Doanh nghiệp (Business Privilege)**
+
+  * **Mô tả:** Đây là cấp độ quyền hạn cao nhất, hoạt động như "vé vào cổng" toàn bộ hệ thống và xác định quyền lực tiềm năng tối đa của người dùng.
+
+| Cấp Đặc quyền | Gán cho (tại Zenith English) | Mô tả Quyền hạn |
+| :--- | :--- | :--- |
+| **Owner** | CEO | Cấp cao nhất. Quản lý thanh toán, có thể chuyển quyền sở hữu và giữ mọi đặc quyền của Admin. |
+| **Admin** | Giám đốc Trung tâm, Quản trị viên Hệ thống | Có thể cấu hình mọi thứ trong hệ thống, từ Cài đặt Toàn cục đến quản lý người dùng. |
+| **App Manager** | Trưởng các Phòng ban (ví dụ: Trưởng phòng Tuyển sinh, Quản lý Học thuật) | Một vai trò chuyên biệt có thể thiết kế, chỉnh sửa và quản lý các Functions 📋. |
+| **Member** | Tất cả nhân viên còn lại (Tư vấn viên, Giáo viên, Kế toán, v.v.) | Đặc quyền tiêu chuẩn cho hầu hết người dùng, cho phép họ làm việc trong các Spaces ⏹️ mà họ được cấp quyền truy cập. |
+
+#### **6.2. Lớp 2: Nguyên tắc Truy cập tiện ích (Principles for Item Access)**
+
+  * **Mô tả:** Các nguyên tắc này đóng vai trò là kim chỉ nam cho Quản trị viên khi gán quyền truy cập vào các "vùng chứa" công việc và tài sản chung.
+
+| Loại Mục | Nguyên tắc Phân quyền | Lý do & Lợi ích |
+| :--- | :--- | :--- |
+| **📂 Areas** | - **Admin:** CEO, Giám đốc TT\<br\>- **Manager:** Trưởng Phòng ban tương ứng\<br\>- **Member:** Nhóm của phòng ban đó | Tạo ra một môi trường làm việc tập trung cho mỗi phòng ban, giảm sự lộn xộn và cải thiện hiệu quả điều hướng. |
+| **👥 Groups** | - **Manager:** Trưởng phòng ban tương ứng\<br\>- **Member:** Tất cả thành viên trong Nhóm | Trao quyền cho các trưởng phòng ban tự quản lý thành viên nhóm của mình, tăng tính linh hoạt và giảm tải cho Quản trị viên Hệ thống. |
+| **Dashboards & Filters**| - **Admin:** Người tạo, CEO, Giám đốc TT\<br\>- **Manager:** Các Trưởng phòng ban liên quan\<br\>- **Member:** Các nhóm hoặc cá nhân được chia sẻ | Đảm bảo rằng dữ liệu tổng hợp và các chỉ số kinh doanh nhạy cảm chỉ được chia sẻ với đúng đối tượng. |
+| **📋 Functions**| - **Admin:** QTV Hệ thống, CEO, Giám đốc TT\<br\>- **Manager:** Người dùng có đặc quyền `App Manager`\<br\>- **Member:** Hầu hết nhân viên | Quản lý chặt chẽ các quy trình kinh doanh cốt lõi trong khi cho phép các trưởng phòng ban linh hoạt tinh chỉnh chúng và cho phép tất cả nhân viên áp dụng. |
+| **⏹️ Spaces** | - **Admin:** Trưởng nhóm hoặc Quản lý (ví dụ: Quản lý Học thuật)\<br\>- **Member:** Tất cả thành viên được mời | Đảm bảo người chịu trách nhiệm chính cho một không gian làm việc (như quản lý lớp học) có toàn quyền kiểm soát nó. |
+
+#### **6.3. Lớp 3: Lược đồ Quyền & Thông báo (Permission & Notification Schemes)**
+
+  * **Mô tả:** Đây là lớp kiểm soát chi tiết nhất, định nghĩa "ai có thể làm gì" và "ai nhận được thông báo về điều gì" đối với từng Object riêng lẻ trong một Space.
+
+| Loại Lược đồ | Lược đồ được chọn cho Zenith English | Mô tả & Lý do |
+| :--- | :--- | :--- |
+| **Lược đồ Quyền** | **"Hạn chế vừa phải"** | **Cân bằng giữa bảo mật và cộng tác:** Mọi người trong Space có thể thấy công việc tồn tại, nhưng chỉ những người dùng được giao trực tiếp mới có thể xem chi tiết và cập nhật, bảo vệ dữ liệu nhạy cảm của học viên. |
+| **Lược đồ Thông báo**| **"Thông báo hành động chính cho người được giao trực tiếp"**| **Giảm nhiễu thông báo:** Chỉ các sự kiện quan trọng (thay đổi trạng thái, @mention) mới kích hoạt cảnh báo cho người dùng liên quan trực tiếp, giúp nhân viên như giáo viên và tư vấn viên tập trung vào các cập nhật cần hành động. |
+
+-----
+
+### **PHỤ LỤC: ƯỚC TÍNH KHỐI LƯỢNG CÔNG VIỆC**
+
+| Hạng mục Cấu hình | Số lượng |
+| :--- | :--- |
+| **Cấu trúc Tổ chức** | |
+| Areas (Phòng ban) | 5 |
+| **Bảng điều khiển, Bộ lọc & Lời nhắc**| |
+| Bảng điều khiển Toàn cục | 1 |
+| Bộ lọc đã lưu Toàn cục | 2 |
+| Lời nhắc theo Bộ lọc | 2 |
+| **Tự động hóa Toàn cục** | |
+| Quy tắc Tự động hóa Liên-hệ-thống | 5 |
+| Quy tắc Tự động hóa Liên-chức-năng | 5 |
+| **Quản lý Người dùng & Workspace** | |
+| Nhóm Toàn cục | 7 |
+| Vai trò Toàn cục | 6 |
+| Workspaces | 3 |
+| **TỔNG CỘNG** | **36** |
+

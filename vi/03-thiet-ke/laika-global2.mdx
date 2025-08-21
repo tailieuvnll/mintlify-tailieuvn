@@ -235,16 +235,21 @@ description: "Description of your new file."
 
 <Tabs>
   <Tab title="Tự động hóa Liên Hệ thống">
+    <Tip>
+      Bạn có thể [mở link canvas](https://kroki.io/mermaid/svg/eNqtVU1v00AQvfdXjIQEB4iqNilpI1QpSZOmSoj6EQqo4rBxtvEqzm6w1xE9cmkluLTlxImGCiFACDgh7AMHo_6P5RfwE5i1m8RJk7ZI5GDJ--bNvDc74yQSiRlD8F3WzMwASJO2aQbqxKH9t21iM1K3qKNxgI7N2sTeywtL2Bm4dSO5sJgtFm_FsRp9Jgf4_FwytbA0gueE3aD2ICKdzK30M1iM04mpHYoiG_HC-TSyUhEqqS1ZHCymigvFdATWidFq2sLljRAJfxHSJoznWs3x46hWH4hl4kLSqeY0iJwBVsgVs8VCDBt1nUzm8_2CxJDCniAkOg95EylTtYRoJd7LwnyhUFzq-3vqUm7QqtuuxxSNVWZdIpngl8vuB03xbQnRmSrSInVq5cSzEXJM5gC_ZFx0yNQCDmtyYg2gu6n03GIuDk1hWmRPuDIDDdK06UwCF6TfsRWGR6QdzRyTFoVKdq2chQSUlL8PNXweVleh8qBcyZbxtEK71IK5DGyd9eDXkfJfQYUFH7kOP8D1Uv4Rb0a9dKXg4X2Er8NbhHIJiANlM-gZJpjBSZ8QgtVtDVbN4C2Hbpg5FDTM0SG4GQbrEC61LB1dcVsWacUC4zGFRzUdE9cHOZ2XN0VwwoaJqzjSILpUC7yDrAymV_4xup9D4zXTRa2ehG5wAqsmA24q7zO_aKNcSiwv3w75eYsZLXjqKu8UixpBT8BNbBpT_nMOu8Juw0Nad5ikIREpCU1FUxnYQcQUovXkXt2eXf69fww15SF_J795f_bPm_cvRgo_CRM06Pn8Up1r_AjTTvJa3R71Oq-9nn2FrvLe8dBsSXk_OFjKf2mYEXl7KPM-5S6UUIMZTsNr1AK_DpX3XZ4zwNT0kIeMQWt2SrXaOmzqKXTkuElH-d-ghW064LAqRBOnMk8sqr-W_89oMprx0040xnhB2mzNJGhFiqDHr-U1EmzG8_yb112G7s5NrgjDAan8T9BW3id3mrEJ9uNfr2GgFjFUseHuYXLviwEG3klvDxdAee_b44I2NuNNgK3CevbxNZWMz_-GG3yQOqHurBzr7BXjnsft6kRLJnHqBZc21sL9WeNdwQwaLcG6yZT308Xk7nV34IqxSOFYrCr_M8Mu6NwSWvjElomLq37VcER5ULtBO_LiWGTX1_RcW0PTEaGA_-LW5IpX3sFfbVr8vw) để zoom xem rõ hơn
+    </Tip>
     <Info>
       Các quy tắc kết nối Luklak với các ứng dụng và dịch vụ bên ngoài (Website, Google, SEPAY, Email...).
     </Info>
+    ![mermaid-diagram-2025-08-21-160448.png](/images/mermaid-diagram-2025-08-21-160448.png)
+
     | Rule #    | Tên Quy tắc                      | Mô tả Nghiệp vụ                                                                                                                      |
     | :-------- | :------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- |
-    | **CF-01** | Nhận Lead từ Landing Page        | Khi khách điền form trên web, **Webhook** sẽ kích hoạt việc tạo `CRM/🧊Khách hàng` và liên kết với `Marketing Campaigns/🧊Ad` nguồn. |
-    | **CF-02** | Tạo Lịch hẹn Google Calendar     | Sales nhấn nút, hệ thống gửi **HTTP Request** qua N8N để tạo sự kiện trên **Google Calendar**.                                       |
-    | **CF-05** | Tạo Hợp đồng Google Docs         | Kế toán nhấn nút, hệ thống gửi **HTTP Request** qua N8N để tự động điền thông tin vào template trên **Google Docs**.                 |
-    | **CF-06** | Ghi nhận Thanh toán từ SEPAY     | **SEPAY** gửi **Webhook** khi nhận tiền, hệ thống tự động tìm và cập nhật trạng thái `Contract & Invoice/🧊Phiếu thu`.               |
-    | **CF-10** | Gửi Email Concept cho Khách hàng | Sales nhấn nút, hệ thống tự động soạn và gửi **Email** cá nhân hóa cho khách hàng.                                                   |
+    | **CS-01** | Nhận Lead từ Landing Page        | Khi khách điền form trên web, **Webhook** sẽ kích hoạt việc tạo `CRM/🧊Khách hàng` và liên kết với `Marketing Campaigns/🧊Ad` nguồn. |
+    | **CS-02** | Tạo Lịch hẹn Google Calendar     | Sales nhấn nút, hệ thống gửi **HTTP Request** qua N8N để tạo sự kiện trên **Google Calendar**.                                       |
+    | **CS-05** | Tạo Hợp đồng Google Docs         | Kế toán nhấn nút, hệ thống gửi **HTTP Request** qua N8N để tự động điền thông tin vào template trên **Google Docs**.                 |
+    | **CS-06** | Ghi nhận Thanh toán từ SEPAY     | **SEPAY** gửi **Webhook** khi nhận tiền, hệ thống tự động tìm và cập nhật trạng thái `Contract & Invoice/🧊Phiếu thu`.               |
+    | **CS-10** | Gửi Email Concept cho Khách hàng | Sales nhấn nút, hệ thống tự động soạn và gửi **Email** cá nhân hóa cho khách hàng.                                                   |
   </Tab>
   <Tab title="Tự động hóa Liên Chức năng">
     <Info>

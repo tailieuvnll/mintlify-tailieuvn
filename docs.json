@@ -77,7 +77,8 @@
           {
             "group": "Function Templates",
             "pages": [
-              "vi/05-templates/index"
+              "vi/05-templates/index",
+              "vi/05-templates/by-use-cases/hrm"
             ]
           }
         ]

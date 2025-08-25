@@ -1,0 +1,241 @@
+---
+title: "Giải pháp HRM"
+---
+
+## **PHẦN 1: CẤU TRÚC TỔ CHỨC & PHÒNG LÀM VIỆC**
+
+#### **1.1. Cấu trúc Tổ chức Hợp nhất**
+
+Sơ đồ này thể hiện cách các chức năng Nhân sự được tổ chức một cách logic trong một Khu vực (Area) chuyên biệt, giúp quản lý tập trung và bảo mật.
+
+```
+🏢 ACME Corporation (Tổ chức)
+│
+└── 📂 NHÂN SỰ (Khu vực)
+    ├── ⏹️ Hồ sơ Nhân sự (Mảng việc)
+    │   └── 📋 Chức năng: HR Information System
+    │       └── 🧊 Nhân viên (Employee)
+    │
+    ├── ⏹️ Tuyển dụng (Mảng việc)
+    │   └── 📋 Chức năng: Recruitment Management
+    │       └── 🧊 Ứng viên (Candidate)
+    │
+    ├── ⏹️ Hội nhập & Thôi việc (Mảng việc)
+    │   └── 📋 Chức năng: Employee Onboarding/Offboarding
+    │       ├── 🧊 Quy trình Hội nhập (Onboarding)
+    │       └── 🧊 Quy trình Thôi việc (Offboarding)
+    │
+    └── ⏹️ Yêu cầu Nhân sự (Mảng việc)
+        └── 📋 Chức năng: HR Request
+            └── 🧊 Yêu cầu (Request)
+```
+
+#### **1.2. Phòng làm việc (Workspace List)**
+
+Đây là các không gian làm việc ảo, được thiết kế để phục vụ các nhóm người dùng khác nhau, giúp họ tập trung vào các công việc và dữ liệu liên quan.
+
+| Tên Phòng làm việc        | Mục đích & Lý do thiết kế                                                                                                      | Items được kéo vào (Dashboards, Filters, Spaces)                                                                               |
+| :------------------------ | :----------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| **HR Team Workspace**     | Không gian làm việc tập trung cho toàn bộ đội ngũ Nhân sự để thực hiện các nghiệp vụ hàng ngày.                                | - **Spaces**: Hồ sơ Nhân sự, Tuyển dụng, Hội nhập & Thôi việc, Yêu cầu Nhân sự\<br\>- **Dashboard**: Báo cáo Tổng quan Nhân sự |
+| **Manager's Workspace**   | Cung cấp cho các Trưởng phòng/Quản lý một giao diện để phê duyệt các yêu cầu từ nhân viên và xem thông tin cơ bản của đội ngũ. | - **Space**: Yêu cầu Nhân sự\<br\>- **Filter**: "Các yêu cầu đang chờ duyệt từ team của tôi"                                   |
+| **Employee Self-Service** | Một cổng thông tin chung cho toàn bộ nhân viên, nơi họ có thể gửi yêu cầu và theo dõi trạng thái.                              | - **Space**: Yêu cầu Nhân sự\<br\>- **Filter**: "Các yêu cầu của tôi"                                                          |
+
+## **PHẦN 2: QUẢN LÝ NGƯỜI DÙNG**
+
+Phần này định nghĩa các tài khoản người dùng, nhóm, và các vai trò trừu tượng cần thiết để quản lý phân quyền và luồng công việc trong toàn bộ giải pháp HRM.
+
+#### **2.1. Quản lý Tài khoản**
+
+[cite_start]Hệ thống sẽ sử dụng hai loại tài khoản để phân biệt giữa các hành động do nhân viên thực hiện và các hành động do quy trình tự động hóa thực thi. [cite: 3]
+
+| Loại Tài khoản           | Mô tả                                                                                                                                                                                                 | Áp dụng tại ACME Corp                                                                                                        |
+| :----------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| **Tài khoản Người dùng** | [cite_start]Tài khoản tiêu chuẩn cho các thành viên, dùng để đăng nhập và làm việc tương tác trên nền tảng. [cite: 3]                                                                                 | Dành cho tất cả nhân viên của ACME Corporation.                                                                              |
+| **Tài khoản Chức năng**  | [cite_start]Một tài khoản đặc biệt, không dùng để đăng nhập, được sử dụng riêng cho công cụ tự động hóa để thực thi các quy tắc, đảm bảo lịch sử hoạt động rõ ràng và phân quyền nhất quán. [cite: 3] | Một tài khoản duy nhất, `hr.automation@acme.com`, sẽ được tạo để thực thi tất cả các quy tắc tự động hóa HRM liên chức năng. |
+
+#### **2.2. Nhóm Toàn cục (Global Groups)**
+
+[cite_start]Nhóm là tập hợp các tài khoản người dùng, giúp cho việc gán quyền và thông báo trở nên đơn giản hơn. [cite: 3]
+
+| Tên Nhóm             | Mô tả & Thành viên tiêu biểu                                                                                |
+| :------------------- | :---------------------------------------------------------------------------------------------------------- |
+| `HR Department`      | Bao gồm tất cả thành viên của phòng Nhân sự.                                                                |
+| `IT Department`      | Bao gồm các nhân viên IT chịu trách nhiệm cấp phát/thu hồi tài khoản và phần cứng.                          |
+| `Finance Department` | Bao gồm các nhân viên kế toán, tính lương liên quan đến quá trình hội nhập và thôi việc.                    |
+| `Hiring Managers`    | Một nhóm linh hoạt bao gồm các quản lý đang có nhu cầu tuyển dụng.                                          |
+| `Board of Directors` | Bao gồm ban lãnh đạo cấp cao để truy cập các báo cáo chiến lược.                                            |
+| `All Employees`      | Một nhóm do hệ thống quản lý chứa toàn bộ người dùng, dùng để cấp quyền truy cập và thông báo toàn công ty. |
+
+#### **2.3. Vai trò Toàn cục (Global Roles)**
+
+[cite_start]Vai trò là các chức danh trừu tượng được sử dụng trong các phương án phân quyền. [cite: 134] [cite_start]Người dùng hoặc nhóm cụ thể sẽ được gán vào các vai trò này trong từng Mảng việc. [cite: 134]
+
+| Tên Vai trò      | Trách nhiệm Cốt lõi                                                                                               |
+| :--------------- | :---------------------------------------------------------------------------------------------------------------- |
+| `HR Manager`     | Giám sát toàn bộ các chức năng nhân sự, xử lý các vấn đề leo thang, và xem báo cáo tổng thể.                      |
+| `Recruiter`      | Quản lý toàn bộ vòng đời tuyển dụng, từ đăng tin đến trao đổi với ứng viên.                                       |
+| `Hiring Manager` | Xem xét và đưa ra phản hồi về các ứng viên cho vị trí tuyển dụng của phòng ban mình.                              |
+| `IT Staff`       | Thực hiện các tác vụ kỹ thuật trong quá trình hội nhập (VD: tạo email) và thôi việc (VD: thu hồi quyền truy cập). |
+| `Finance Staff`  | Xử lý các thủ tục lương và thanh toán cuối kỳ trong quá trình hội nhập và thôi việc.                              |
+| `Employee`       | Vai trò tiêu chuẩn cho tất cả nhân viên, chủ yếu để gửi và theo dõi các yêu cầu nhân sự của chính họ.             |
+
+---
+
+## **PHẦN 3: MÔ HÌNH QUAN HỆ ĐỐI TƯỢNG**
+
+Phần này vạch ra các mối quan hệ giữa các loại công việc (`Object`) khác nhau napmgf trong các chức năng Nhân sự của bạn. Nền tảng Luklak cung cấp bốn phương pháp để tạo ra các kết nối này, mỗi phương pháp phục vụ một mục đích kiến trúc riêng biệt. Chúng ta sẽ sử dụng kết hợp các phương pháp này để xây dựng một mô hình vững chắc.
+
+#### **3.1. Quan hệ Cha-con**
+
+- **Mô tả:** Phương pháp này tạo ra một liên kết phân cấp chặt chẽ, trong đó một đối tượng "con" là một phần của đối tượng "cha". [cite_start]Đây là lựa chọn lý tưởng để chia nhỏ một hạng mục công việc lớn thành các nhiệm vụ nhỏ hơn, dễ quản lý. [cite: 65, 216]
+- **Áp dụng tại ACME Corp:**
+
+| Object Cha            | Object Con           | Lý do Kiến trúc                                                                                                                                                                                                                                 |
+| :-------------------- | :------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Quy trình Hội nhập`  | `Nhiệm vụ Hội nhập`  | **Phân rã Công việc:** Một `Quy trình Hội nhập` là một quy trình phức tạp. Việc chia nhỏ nó thành các `Nhiệm vụ Hội nhập` riêng lẻ (VD: "Chuẩn bị Laptop," "Thiết lập Lương") cho phép giao việc và theo dõi các hạng mục con một cách rõ ràng. |
+| `Quy trình Thôi việc` | `Nhiệm vụ Thôi việc` | **Phân rã Công việc:** Tương tự quy trình hội nhập, quy trình thôi việc được chia thành các nhiệm vụ riêng biệt (VD: "Bàn giao Tài sản," "Thu hồi Quyền truy cập") để đảm bảo trách nhiệm.                                                      |
+
+#### **3.2. Kết nối Toàn cục**
+
+- **Mô tả:** Đây là các loại mối quan hệ hai chiều, có thể tái sử dụng (VD: "liên quan đến," "gây ra bởi") được quản lý ở cấp toàn cục. [cite_start]Chúng giúp chuẩn hóa _ý nghĩa_ của sự kết nối giữa hai đối tượng bất kỳ trong hệ thống. [cite: 64, 215]
+- **Áp dụng tại ACME Corp:**
+
+| Loại Kết nối              | Object A             | Quan hệ A → B          | Object B              | Quan hệ B → A      |
+| :------------------------ | :------------------- | :--------------------- | :-------------------- | :----------------- |
+| **Tuyển dụng → Hội nhập** | `Ứng viên`           | Được hội nhập qua      | `Quy trình Hội nhập`  | Dành cho ứng viên  |
+| **Hội nhập → Nhân sự**    | `Quy trình Hội nhập` | Tạo ra                 | `Nhân viên`           | Được tạo từ        |
+| **Nhân sự ↔ Yêu cầu**     | `Nhân viên`          | Gửi                    | `Yêu cầu`             | Được gửi bởi       |
+| **Nhân sự ↔ Thôi việc**   | `Nhân viên`          | Được cho thôi việc qua | `Quy trình Thôi việc` | Dành cho nhân viên |
+
+#### **3.3. Trường Chọn Đối tượng**
+
+- [cite_start]**Mô tả:** Loại trường này là cách thức triển khai thực tế của một mối quan hệ, cho phép người dùng chọn một hoặc nhiều đối tượng từ một chức năng khác và liên kết chúng với đối tượng hiện tại. [cite: 64, 215]
+- **Áp dụng tại ACME Corp:**
+
+| Trường được tạo trên Object | Tên Trường       | Loại Trường                 | Mục đích                                                                        |
+| :-------------------------- | :--------------- | :-------------------------- | :------------------------------------------------------------------------------ |
+| `Quy trình Hội nhập`        | `Ứng viên`       | Chọn 1 `Ứng viên`           | Để liên kết quy trình hội nhập với ứng viên đã trúng tuyển từ luồng tuyển dụng. |
+| `Nhân viên`                 | `Nguồn Hội nhập` | Chọn 1 `Quy trình Hội nhập` | Để lưu lại lịch sử về quy trình hội nhập đã tạo ra hồ sơ nhân viên này.         |
+| `Yêu cầu`                   | `Người yêu cầu`  | Chọn 1 `Nhân viên`          | Để tự động xác định và liên kết với nhân viên đang gửi yêu cầu Nhân sự.         |
+| `Quy trình Thôi việc`       | `Nhân viên`      | Chọn 1 `Nhân viên`          | Để xác định quy trình thôi việc này áp dụng cho nhân viên nào.                  |
+
+#### **3.4. Trường Bảng dữ liệu**
+
+- **Mô tả:** Một loại trường đặc biệt hoạt động như một 'bảng tính' được nhúng bên trong một đối tượng. [cite_start]Nó hoàn hảo để quản lý các danh sách dữ liệu có cấu trúc như dòng đơn hàng, checklist, hoặc nhật ký. [cite: 432]
+- **Áp dụng tại ACME Corp:**
+
+| Sử dụng trên Object                         | Tên Bảng dữ liệu           | Các cột ví dụ                                                                                        | Lý do & Lợi ích                                                                                                                                                                                                                |
+| :------------------------------------------ | :------------------------- | :--------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Quy trình Hội nhập`, `Quy trình Thôi việc` | `Checklist Liên phòng ban` | `Tên Nhiệm vụ`, `Phòng ban Phụ trách` (VD: IT, Kế toán), `Trạng thái`, `Người hoàn thành`, `Ghi chú` | Điều này cho phép phòng Nhân sự quản lý và theo dõi các nhiệm vụ phải được hoàn thành bởi các phòng ban khác (IT, Kế toán) trực tiếp ngay trên hồ sơ hội nhập/thôi việc, cung cấp một cái nhìn toàn cảnh tại một nơi duy nhất. |
+
+---
+
+## **PHẦN 4: GIAO DIỆN LÀM VIỆC, BÁO CÁO, BỘ LỌC & NHẮC VIỆC**
+
+Phần này định nghĩa các công cụ báo cáo và tổng hợp dữ liệu liên chức năng. Các thành phần này sẽ cung cấp cho nhân viên Nhân sự, quản lý và ban lãnh đạo những thông tin chi tiết cần thiết để đưa ra quyết định.
+
+#### **4.1. Giao diện làm việc Toàn cục**
+
+Giao diện làm việc là các màn hình được cấu hình sẵn để quản lý vận hành hàng ngày, tổng hợp các hạng mục công việc từ nhiều nguồn khác nhau.
+
+| Tên Giao diện làm việc        | Loại Giao diện | Nguồn dữ liệu & Logic Lọc                                                                             | Đối tượng     |
+| :---------------------------- | :------------- | :---------------------------------------------------------------------------------------------------- | :------------ |
+| **Tất cả Yêu cầu Nhân sự Mở** | Dạng Danh sách | **Nguồn:** `Yêu cầu Nhân sự/🧊Yêu cầu`\<br\>**Logic:** `Trạng thái` KHÁC "Hoàn thành" VÀ "Bị từ chối" | Phòng Nhân sự |
+
+#### **4.2. Báo cáo Toàn cục**
+
+Báo cáo này cung cấp một cái nhìn tổng thể, 360 độ về tất cả các hoạt động liên quan đến Nhân sự.
+
+| Tên Báo cáo                        | Mục đích & Đối tượng                                                                                                                 |
+| :--------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- |
+| **Tổng quan Nhân sự & Tuyển dụng** | Cung cấp cho Trưởng phòng Nhân sự và ban lãnh đạo một cái nhìn toàn diện về phễu tuyển dụng, khối lượng yêu cầu và số lượng nhân sự. |
+
+- **Cấu trúc chi tiết của Báo cáo "Tổng quan Nhân sự & Tuyển dụng":**
+
+| # | Tên Component (Gadget)                  | Loại Biểu đồ       | Nguồn Dữ liệu (Chức năng & Objects)         | Logic & Chỉ số chính                                                                                 |
+| :-- | :-------------------------------------- | :----------------- | :------------------------------------------ | :--------------------------------------------------------------------------------------------------- |
+| 1 | **Phễu Tuyển dụng**                     | Biểu đồ tròn       | `Tuyển dụng/🧊Ứng viên`                     | `ĐẾM(Ứng viên)` nhóm theo `Trạng thái` (VD: Đã ứng tuyển, Sàng lọc, Phỏng vấn, Đề nghị).             |
+| 2 | **Thời gian Tuyển dụng (TB)**           | Bộ đếm & Tính toán | `Tuyển dụng/🧊Ứng viên`                     | `TRUNG BÌNH(Ngày trúng tuyển - Ngày ứng tuyển)` cho các ứng viên có `Trạng thái` = "Đã trúng tuyển". |
+| 3 | **Yêu cầu Mở theo Loại**                | Biểu đồ cột        | `Yêu cầu Nhân sự/🧊Yêu cầu`                 | `ĐẾM(Yêu cầu)` nhóm theo `Loại Yêu cầu` với `Trạng thái` đang mở.                                    |
+| 4 | **Nhân sự theo Phòng ban**              | Thống kê 2 chiều   | `Hồ sơ Nhân sự/🧊Nhân viên`                 | **Trục X:** `Phòng ban`. **Trục Y:** `Chức danh`. **Giá trị:** `ĐẾM(Nhân viên)`.                     |
+| 5 | **Các Quy trình Hội nhập đang diễn ra** | Danh sách Object   | `Hội nhập & Thôi việc/🧊Quy trình Hội nhập` | Liệt kê tất cả quy trình hội nhập có `Trạng thái` khác "Hoàn thành".                                 |
+
+#### **4.3. Bộ lọc Toàn cục đã lưu**
+
+Các bộ lọc đã lưu giúp các nhóm người dùng cụ thể truy cập nhanh vào các danh sách công việc quan trọng.
+
+| Tên Bộ lọc                           | Nguồn dữ liệu & Logic Lọc                                                                                                              | Mục đích & Đối tượng                                                                |
+| :----------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- |
+| **Yêu cầu đang chờ từ team của tôi** | **Nguồn:** `Yêu cầu Nhân sự/🧊Yêu cầu`\<br\>**Logic:** `Người yêu cầu.Quản lý` = Người dùng hiện tại VÀ `Trạng thái` = "Chờ phê duyệt" | Dành cho các quản lý để nhanh chóng xem và xử lý các yêu cầu từ nhân viên cấp dưới. |
+| **Ứng viên đang chờ Review**         | **Nguồn:** `Tuyển dụng/🧊Ứng viên`\<br\>**Logic:** `Trạng thái` = "Chờ Quản lý Review" VÀ `Hiring Manager` = Người dùng hiện tại       | Dành cho các quản lý tuyển dụng để dễ dàng tìm thấy các ứng viên cần họ xem xét.    |
+
+#### **4.4. Nhắc việc Bộ lọc**
+
+Các thông báo tự động dựa trên bộ lọc đã lưu để đảm bảo các công việc quan trọng được xử lý kịp thời.
+
+| Tên Lời nhắc                              | Nguồn dữ liệu & Bộ lọc sử dụng                                                                                               | Tần suất & Thời gian  | Người nhận (Vai trò/Nhóm) |
+| :---------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- | :-------------------- | :------------------------ |
+| **Cảnh báo SLA: Yêu cầu Nhân sự quá hạn** | **Nguồn:** `Yêu cầu Nhân sự/🧊Yêu cầu`\<br\>**Logic:** `Trạng thái` LÀ "Chờ phê duyệt" VÀ `Ngày tạo` đã hơn 2 ngày làm việc. | Hàng ngày lúc 9:00 SA | Nhóm `HR Department`      |
+
+## **PHẦN 5: LOGIC & TỰ ĐỘNG HÓA TOÀN CỤC**
+
+Phần này trình bày chi tiết các quy tắc tự động hóa kết nối các chức năng HRM, hiện được sắp xếp theo trình tự thời gian để thể hiện toàn bộ hành trình của một nhân viên.
+
+#### **5.1. Tự động hóa Liên Hệ thống**
+
+Các quy tắc này kết nối Luklak với các ứng dụng và website bên ngoài của công ty bạn.
+
+| Trình tự | Rule # | Tên Quy tắc | Logic & Ghi chú |
+| :--- | :--- | :--- | :--- |
+| 1 | CS-01 | **Đăng tin Tuyển dụng lên Website** | Người dùng nhấn một nút trên một bản ghi tin tuyển dụng trong Mảng việc Tuyển dụng, hành động này sẽ gửi một **Webhook** đến CMS của website công ty để tự động đăng tin tuyển dụng lên trang việc làm. |
+| 2 | CS-02 | **Nhận Hồ sơ Ứng viên** | Khi một ứng viên nộp hồ sơ qua website công ty hoặc một trang việc làm có kết nối (VD: LinkedIn), một **Webhook** sẽ gửi dữ liệu ứng tuyển đến Luklak, tự động tạo một object `Tuyển dụng/🧊Ứng viên` mới với trạng thái "Mới," kèm theo CV của họ. |
+
+#### **5.2. Tự động hóa Liên Chức năng**
+
+Các quy tắc này điều phối các quy trình giữa các chức năng HRM khác nhau và các phòng ban khác *bên trong* Luklak.
+
+| Trình tự | Rule # | Tên Quy tắc | Mô tả Nghiệp vụ |
+| :--- | :--- | :--- | :--- |
+| 3 | CF-01 | **Ứng viên Trúng tuyển → Bắt đầu Hội nhập**| Việc thay đổi trạng thái trên `Tuyển dụng/🧊Ứng viên` thành "Đã trúng tuyển" sẽ tự động tạo một `Hội nhập & Thôi việc/🧊Quy trình Hội nhập` mới và sao chép các thông tin liên quan của ứng viên. |
+| 4 | CF-02 | **Bắt đầu Hội nhập → Tạo việc cho IT & Kế toán**| Việc thay đổi trạng thái trên `Hội nhập & Thôi việc/🧊Quy trình Hội nhập` sẽ tự động tạo các object con `Nhiệm vụ Hội nhập` và gán chúng cho phòng ban IT và Kế toán. |
+| 5 | CF-03 | **Hoàn thành Hội nhập → Tạo Hồ sơ Nhân viên** | Việc thay đổi trạng thái trên `Hội nhập & Thôi việc/🧊Quy trình Hội nhập` thành "Hoàn thành" sẽ tự động tạo hồ sơ `Hồ sơ Nhân sự/🧊Nhân viên` chính thức với đầy đủ thông tin đã xác minh. |
+| 6 | CF-04 | **Nhân viên Thôi việc → Bắt đầu Quy trình Thôi việc**| Việc thay đổi trạng thái trên `Hồ sơ Nhân sự/🧊Nhân viên` thành "Đã nghỉ việc" sẽ tự động tạo một `Hội nhập & Thôi việc/🧊Quy trình Thôi việc` mới. |
+| 7 | CF-05 | **Bắt đầu Thôi việc → Tạo việc cho IT & Kế toán**| Việc tạo ra một `Hội nhập & Thôi việc/🧊Quy trình Thôi việc` sẽ tự động tạo các object con `Nhiệm vụ Thôi việc` và gán chúng cho phòng ban IT và Kế toán để thực hiện. |
+
+---
+## **PHẦN 6: MÔ HÌNH PHÂN QUYỀN**
+
+Phần này định nghĩa chiến lược bảo mật và kiểm soát truy cập cho toàn bộ giải pháp HRM, sử dụng mô hình bảo mật 3 lớp của Luklak.
+
+#### **6.1. Lớp 1: Đặc quyền Doanh nghiệp**
+
+Đây là cấp độ phân quyền cao nhất, xác định quyền hạn tối đa mà một người dùng có thể có trong hệ thống.
+
+| Cấp Đặc quyền | Được gán cho (tại ACME Corp) | Mô tả Phân quyền |
+| :--- | :--- | :--- |
+| **Owner (Chủ sở hữu)** | CEO | Có toàn quyền kiểm soát tổ chức, bao gồm cả thanh toán và chuyển giao quyền sở hữu. |
+| **Admin (Quản trị viên)** | Trưởng phòng Nhân sự, Quản trị Hệ thống | Có thể cấu hình tất cả các cài đặt toàn hệ thống, quản lý người dùng và truy cập mọi dữ liệu. |
+| **App Manager (Quản lý App)** | Chuyên viên Quy trình Nhân sự Cấp cao | Có thể thiết kế, chỉnh sửa và quản lý bốn Chức năng HRM cốt lõi (các bản thiết kế). |
+| **Member (Thành viên)** | Tất cả nhân viên còn lại | Đặc quyền tiêu chuẩn cho người dùng để làm việc trong các Mảng việc mà họ được cấp quyền truy cập. |
+
+#### **6.2. Lớp 2: Nguyên tắc Phân quyền Truy cập Tiện ích**
+
+Các nguyên tắc này hướng dẫn quản trị viên trong việc cấp quyền truy cập vào các "vùng chứa" công việc và dữ liệu (Khu vực, Mảng việc, Báo cáo, v.v.).
+
+| Loại Tiện ích | Nguyên tắc Phân quyền | Lý do & Lợi ích |
+| :--- | :--- | :--- |
+| **📂 Khu vực** | **Khu vực Nhân sự** chỉ có thể được truy cập bởi nhóm `HR Department`. | Tạo ra một ranh giới bảo mật, đảm bảo rằng tất cả dữ liệu nhân viên nhạy cảm chứa trong các Mảng việc Nhân sự được cách ly khỏi phần còn lại của tổ chức. |
+| **Báo cáo & Bộ lọc** | **Báo cáo Tổng quan Nhân sự** chỉ được chia sẻ cho nhóm `HR Department` và `Board of Directors`. | Bảo vệ các chỉ số nhân sự tổng hợp và nhạy cảm, đồng thời cung cấp cho ban lãnh đạo cái nhìn tổng quan cần thiết. |
+| **📋 Chức năng** | Quyền chỉnh sửa bốn Chức năng HRM được giới hạn cho người dùng có đặc quyền **App Manager**. | Bảo vệ tính toàn vẹn của các quy trình nghiệp vụ cốt lõi, đảm bảo chỉ các chuyên gia được ủy quyền mới có thể sửa đổi logic nền tảng của hệ thống HRM. |
+| **⏹️ Mảng việc** | **Tuyển dụng, Hồ sơ Nhân sự, Hội nhập & Thôi việc** được giới hạn cho nhóm `HR Department`. **Yêu cầu Nhân sự** có thể được truy cập bởi `All Employees` (để tạo) và `HR Department` (để quản lý). | Cung cấp cho đội ngũ Nhân sự một môi trường làm việc an toàn, đồng thời cho phép tất cả nhân viên truy cập vào cổng yêu cầu tự phục vụ. |
+
+#### **6.3. Lớp 3: Phương án Phân quyền & Thông báo**
+
+Đây là lớp kiểm soát chi tiết nhất, định nghĩa các quy tắc mặc định về việc người dùng có thể làm gì với từng hạng mục công việc (`Object`).
+
+| Loại Phương án | Phương án được chọn cho ACME Corp | Mô tả & Lý do |
+| :--- | :--- | :--- |
+| **Phương án Phân quyền** | **"Phân quyền chặt"** | Cân bằng giữa bảo mật và nhu cầu riêng tư. Trong phương án này, người dùng trong Mảng việc có thể thấy các hạng mục công việc tồn tại, nhưng chỉ những người được gán trực tiếp (VD: Recruiter, Hiring Manager cho một Ứng viên cụ thể) mới có thể xem chi tiết và cập nhật. Điều này rất cần thiết để bảo vệ dữ liệu nhân sự bí mật. |
+| **Phương án Thông báo** | **"Thông báo quan trọng tới người liên quan"** | Giảm thiểu "nhiễu" thông báo. Chỉ những sự kiện quan trọng (như thay đổi trạng thái hoặc @mention) mới kích hoạt cảnh báo, và chỉ gửi đến những người dùng trực tiếp liên quan đến hạng mục đó. Điều này giúp đội ngũ Nhân sự tập trung vào các cập nhật cần hành động mà không bị quá tải. |
+
+---
